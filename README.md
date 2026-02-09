@@ -11,17 +11,18 @@ This project implements an autonomous data ingestion system that dynamically rou
 1. For creating venv in bash
 ``` bash 
 python -m venv venv
-``` bash
+``` 
 - for activation:
 ```bash 
 source venv/Scripts/activate
-```bash
+``` 
 - To stop 
-```bash 
-deactivate 
 ``` bash 
+deactivate 
+``` 
+
 2. For installing requirements:
-```bash 
+``` bash 
 pip install -r requirements.txt
 ```
 1. Start the dummy JSON API:
