@@ -1,0 +1,7 @@
+# for mongo db in bash
+we have to manually start the mongodb when in use
+/c/MongoDB/bin/mongod.exe --dbpath=/c/data/db --logpath=/c/data/log/mongod.log
+
+# for starting MySQL80 :
+use "net start MySQL80" to start the server of MySQL80
+use "net stop MySQL80" to stop the server of MySQL80
