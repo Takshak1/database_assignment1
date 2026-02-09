@@ -8,6 +8,11 @@ This project implements an autonomous data ingestion system that dynamically rou
 - **Step 3:** Timestamps, uniqueness handling, metadata persistence.
 
 ## How to Run
-1. Start the dummy JSON API:
+1. For installing requirements:
+```bash 
+pip install -r requirements.txt
+```
+2. Start the dummy JSON API:
 ```bash
 uvicorn simulation_code:app --reload --port 8000
+```
