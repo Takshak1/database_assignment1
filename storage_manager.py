@@ -2,24 +2,29 @@
 storage_manager.py - Handles routing and storage to SQL/MongoDB
 Implements Phase 4: Commit & Routing with bi-temporal timestamps
 """
+import os
 import mysql.connector
 from pymongo import MongoClient
 from datetime import datetime
 import json
+from dotenv import load_dotenv
 
-# Database Configurations
+# Load environment variables from .env (if present)
+load_dotenv()
+
+# Database Configurations (read from environment with sensible defaults)
 MYSQL_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'devil',
-    'database': 'streaming_db'
+    'host': os.getenv('MYSQL_HOST', 'localhost'),
+    'user': os.getenv('MYSQL_USER', 'root'),
+    'password': os.getenv('MYSQL_PASSWORD', 'devil'),
+    'database': os.getenv('MYSQL_DATABASE', 'streaming_db')
 }
 
 MONGO_CONFIG = {
-    'host': 'localhost',
-    'port': 27017,
-    'database': 'streaming_db',
-    'collection': 'logs'
+    'host': os.getenv('MONGO_HOST', 'localhost'),
+    'port': int(os.getenv('MONGO_PORT', 27017)),
+    'database': os.getenv('MONGO_DATABASE', 'streaming_db'),
+    'collection': os.getenv('MONGO_COLLECTION', 'logs')
 }
 
 
@@ -40,9 +45,9 @@ class StorageManager:
         try:
             self.mysql_conn = mysql.connector.connect(**MYSQL_CONFIG)
             self.mysql_cursor = self.mysql_conn.cursor()
-            print("✓ MySQL connected")
+            print("MySQL connected")
         except Exception as e:
-            print(f"✗ MySQL connection failed: {e}")
+            print(f"MySQL connection failed: {e}")
             return False
         
         # Connect to MongoDB
@@ -52,9 +57,9 @@ class StorageManager:
             self.mongo_client.server_info()  # Test connection
             db = self.mongo_client[MONGO_CONFIG['database']]
             self.mongo_collection = db[MONGO_CONFIG['collection']]
-            print("✓ MongoDB connected")
+            print("MongoDB connected")
         except Exception as e:
-            print(f"✗ MongoDB connection failed: {e}")
+            print(f"MongoDB connection failed: {e}")
             return False
         
         return True
@@ -108,9 +113,9 @@ class StorageManager:
             self.mysql_cursor.execute(create_query)
             self.mysql_conn.commit()
             self.sql_schema_created = True
-            print(f"✓ SQL schema created with {len(columns)} columns")
+            print(f"SQL schema created with {len(columns)} columns")
         except Exception as e:
-            print(f"✗ SQL schema creation failed: {e}")
+            print(f"SQL schema creation failed: {e}")
     
     def store_record(self, record, decisions):
         """
@@ -178,7 +183,7 @@ class StorageManager:
             
             return self.mysql_cursor.lastrowid
         except Exception as e:
-            print(f"✗ SQL insert error: {e}")
+            print(f"SQL insert error: {e}")
             return None
     
     def _insert_mongo(self, data):
@@ -187,7 +192,7 @@ class StorageManager:
             result = self.mongo_collection.insert_one(data)
             return str(result.inserted_id)
         except Exception as e:
-            print(f"✗ MongoDB insert error: {e}")
+            print(f"MongoDB insert error: {e}")
             return None
     
     def get_stats(self):
@@ -208,13 +213,219 @@ class StorageManager:
         
         return {'sql': sql_count, 'mongo': mongo_count}
     
+    def get_linked_records_by_user(self, username, limit=10):
+        """
+        Demonstrate bi-temporal join: fetch records from both backends for a user
+        
+        Args:
+            username: target username to query
+            limit: max records to return from each backend
+            
+        Returns:
+            dict with 'sql_records' and 'mongo_records' showing linked data
+        """
+        sql_records = []
+        mongo_records = []
+        
+        try:
+            # Query SQL records for this user
+            sql_query = """
+            SELECT username, t_stamp, sys_ingested_at, id 
+            FROM logs 
+            WHERE username = %s 
+            ORDER BY sys_ingested_at DESC 
+            LIMIT %s
+            """
+            self.mysql_cursor.execute(sql_query, (username, limit))
+            sql_results = self.mysql_cursor.fetchall()
+            
+            # Convert to dict format
+            sql_columns = [desc[0] for desc in self.mysql_cursor.description]
+            for row in sql_results:
+                sql_records.append(dict(zip(sql_columns, row)))
+        
+        except Exception as e:
+            print(f"SQL query error: {e}")
+        
+        try:
+            # Query MongoDB records for this user
+            mongo_results = self.mongo_collection.find(
+                {"username": username},
+                {"username": 1, "t_stamp": 1, "sys_ingested_at": 1, "_id": 1}
+            ).sort("sys_ingested_at", -1).limit(limit)
+            
+            # Convert ObjectId to string for display
+            for doc in mongo_results:
+                doc['_id'] = str(doc['_id'])
+                mongo_records.append(doc)
+        
+        except Exception as e:
+            print(f"MongoDB query error: {e}")
+        
+        return {
+            'username': username,
+            'sql_records': sql_records,
+            'mongo_records': mongo_records,
+            'total_sql': len(sql_records),
+            'total_mongo': len(mongo_records)
+        }
+    
+    def get_linked_records_by_timerange(self, start_time, end_time, limit=20):
+        """
+        Bi-temporal join: fetch records from both backends within a time window
+        
+        Args:
+            start_time: datetime object for range start
+            end_time: datetime object for range end
+            limit: max records per backend
+            
+        Returns:
+            dict with time-linked records from both backends
+        """
+        sql_records = []
+        mongo_records = []
+        
+        try:
+            # SQL query with time range
+            sql_query = """
+            SELECT username, t_stamp, sys_ingested_at, id
+            FROM logs 
+            WHERE sys_ingested_at BETWEEN %s AND %s
+            ORDER BY sys_ingested_at ASC
+            LIMIT %s
+            """
+            self.mysql_cursor.execute(sql_query, (start_time, end_time, limit))
+            sql_results = self.mysql_cursor.fetchall()
+            
+            sql_columns = [desc[0] for desc in self.mysql_cursor.description]
+            for row in sql_results:
+                sql_records.append(dict(zip(sql_columns, row)))
+        
+        except Exception as e:
+            print(f"SQL time-range query error: {e}")
+        
+        try:
+            # MongoDB query with time range
+            mongo_results = self.mongo_collection.find(
+                {
+                    "sys_ingested_at": {
+                        "$gte": start_time,
+                        "$lte": end_time
+                    }
+                },
+                {"username": 1, "t_stamp": 1, "sys_ingested_at": 1, "_id": 1}
+            ).sort("sys_ingested_at", 1).limit(limit)
+            
+            for doc in mongo_results:
+                doc['_id'] = str(doc['_id'])
+                mongo_records.append(doc)
+        
+        except Exception as e:
+            print(f"MongoDB time-range query error: {e}")
+        
+        return {
+            'time_range': f"{start_time} to {end_time}",
+            'sql_records': sql_records,
+            'mongo_records': mongo_records,
+            'total_sql': len(sql_records),
+            'total_mongo': len(mongo_records)
+        }
+    
+    def demonstrate_bi_temporal_join(self):
+        """
+        Comprehensive demonstration of bi-temporal linking capabilities
+        Shows how records are connected across backends via username + timestamps
+        """
+        print("\n" + "=" * 80)
+        print("                    BI-TEMPORAL JOIN DEMONSTRATION")
+        print("=" * 80)
+        
+        try:
+            # Get sample usernames from both backends
+            sql_users = []
+            mongo_users = []
+            
+            # Sample users from SQL
+            try:
+                self.mysql_cursor.execute("SELECT DISTINCT username FROM logs LIMIT 3")
+                sql_users = [row[0] for row in self.mysql_cursor.fetchall()]
+            except:
+                pass
+            
+            # Sample users from MongoDB
+            try:
+                mongo_users = list(self.mongo_collection.distinct("username"))[:3]
+            except:
+                pass
+            
+            # Find common users (demonstrates linking capability)
+            common_users = list(set(sql_users) & set(mongo_users))
+            
+            print(f"SQL Users Sample: {sql_users}")
+            print(f"MongoDB Users Sample: {mongo_users}")
+            print(f"Common Users (Linkable): {common_users}")
+            
+            if common_users:
+                # Demonstrate user-based linking
+                sample_user = common_users[0]
+                print(f"\nBi-Temporal Join for User: '{sample_user}'")
+                print("-" * 50)
+                
+                linked_data = self.get_linked_records_by_user(sample_user, limit=5)
+                
+                print(f"SQL Records for {sample_user}:")
+                for i, record in enumerate(linked_data['sql_records'], 1):
+                    print(f"  {i}. ID={record.get('id')}, t_stamp={record.get('t_stamp')}, sys_time={record.get('sys_ingested_at')}")
+                
+                print(f"\nMongoDB Records for {sample_user}:")
+                for i, record in enumerate(linked_data['mongo_records'], 1):
+                    print(f"  {i}. _id={record.get('_id')[:8]}..., t_stamp={record.get('t_stamp')}, sys_time={record.get('sys_ingested_at')}")
+                
+                print(f"\nLinking Summary:")
+                print(f"  - Total SQL records: {linked_data['total_sql']}")
+                print(f"  - Total MongoDB records: {linked_data['total_mongo']}")
+                print(f"  - Linking Key: username='{sample_user}' + bi-temporal timestamps")
+            
+            # Demonstrate time-range linking
+            print(f"\nTime-Range Bi-Temporal Join")
+            print("-" * 40)
+            from datetime import datetime, timedelta
+            
+            now = datetime.now()
+            start_time = now - timedelta(hours=1)  # Last hour
+            end_time = now
+            
+            time_linked = self.get_linked_records_by_timerange(start_time, end_time, limit=5)
+            
+            print(f"Records from both backends in last hour:")
+            print(f"  - SQL records: {time_linked['total_sql']}")
+            print(f"  - MongoDB records: {time_linked['total_mongo']}")
+            
+            print(f"\nSample SQL records from time range:")
+            for i, record in enumerate(time_linked['sql_records'][:3], 1):
+                print(f"  {i}. User: {record.get('username')}, Time: {record.get('sys_ingested_at')}")
+            
+            print(f"\nSample MongoDB records from time range:")
+            for i, record in enumerate(time_linked['mongo_records'][:3], 1):
+                print(f"  {i}. User: {record.get('username')}, Time: {record.get('sys_ingested_at')}")
+            
+            print(f"\nBi-temporal join capability demonstrated successfully!")
+            print(f"Key Features:")
+            print(f"  - Username preservation across backends")
+            print(f"  - Client timestamps (t_stamp) for historical context")
+            print(f"  - Server timestamps (sys_ingested_at) for join operations")
+            print(f"  - Cross-backend querying and linking")
+            
+        except Exception as e:
+            print(f"Bi-temporal demonstration error: {e}")
+    
     def close(self):
         """Close all connections"""
         if self.mysql_cursor:
             self.mysql_cursor.close()
         if self.mysql_conn:
             self.mysql_conn.close()
-            print("✓ MySQL closed")
+            print("MySQL closed")
         if self.mongo_client:
             self.mongo_client.close()
-            print("✓ MongoDB closed")
+            print("MongoDB closed")

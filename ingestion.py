@@ -2,7 +2,7 @@ import requests
 import json
 import time
 
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "http://127.0.0.1:8001"
 
 
 def stream_records(batch_size, delay=1):
