@@ -174,10 +174,10 @@ def classify(stats):
         decision = "mongo"  # Default
         reason = "default"
         
-        # Rule 1: Type conflicts always go to MongoDB (normalization conflict handling)
-        if s.get("has_type_conflict", False):
+        # Rule 1: Type ambiguities always go to MongoDB
+        if s.get("has_type_ambiguity", False):
             decision = "mongo"
-            reason = "type_conflict_from_normalization"
+            reason = "type_ambiguity_detected"
             
         # Rule 2: Nested structures always go to MongoDB
         elif is_nested:
@@ -329,14 +329,14 @@ def classify_with_placement_heuristics(stats):
         'long_text_threshold': 120
     }
     
-    for canonical, s in stats.items():
+    for field_name, s in stats.items():
         # Extract signals
         freq = s['freq']
         types_count = s['types_count']
         uniqueness_ratio = s['uniqueness_ratio']
         stability = s['stability']
         nested = s['nested']
-        has_type_conflict = s['has_type_conflict']
+        has_type_ambiguity = s['has_type_ambiguity']
         semantic_info = s['semantic_info']
         composite_score = s['composite_score']
         
@@ -361,10 +361,10 @@ def classify_with_placement_heuristics(stats):
             reason = f"drift_quarantine_{quarantine_reason}"
             confidence = max(0.1, 0.9 - drift_score)  # Confidence reduces with drift
             
-        # Rule 0: Type conflicts from normalization → MongoDB
-        elif has_type_conflict:
+        # Rule 0: Type ambiguities → MongoDB
+        elif has_type_ambiguity:
             decision = "mongo"
-            reason = "type_conflict_from_normalization"
+            reason = "type_ambiguity_detected"
             confidence = 0.9 - (drift_score * 0.2)  # Reduce confidence if also has drift
             
         # Rule 1: Forced MongoDB cases
@@ -421,8 +421,8 @@ def classify_with_placement_heuristics(stats):
             reason = "flexible_schema_default"
             confidence = 0.6
         
-        decisions[canonical] = decision
-        placement_reasons[canonical] = {
+        decisions[field_name] = decision
+        placement_reasons[field_name] = {
             'decision': decision,
             'reason': reason,
             'confidence': confidence,

@@ -3,24 +3,23 @@ from normalize import normalize_record
 from analyzer import Analyzer
 from classifier import classify_with_placement_heuristics, get_placement_summary
 from storage_manager import StorageManager
+from metadata_manager import MetadataManager
 import json
 
 print("=" * 80)
 print("           ADAPTIVE INGESTION & HYBRID BACKEND PLACEMENT")
 print("=" * 80)
 
-# Initialize components
+# Initialize components with enhanced metadata management
 analyzer = Analyzer()
 storage = StorageManager()
+metadata_mgr = MetadataManager()  # Uses metadata.json with enhanced format
 
-# Load previous metadata if exists
-try:
-    with open("metadata.json") as f:
-        metadata = json.load(f)
-        print(f"Loaded previous metadata with {len(metadata)} field decisions")
-except:
-    metadata = {}
-    print("No previous metadata found")
+print(f"Enhanced metadata system initialized with {len(metadata_mgr.field_metadata)} detailed field profiles")
+
+# Extract simple placement decisions for backward compatibility
+metadata = metadata_mgr.get_simple_placement_decisions()
+print(f"Extracted {len(metadata)} placement decisions for pipeline compatibility")
 
 # Connect to databases (Phase 4: Commit & Routing)
 print("\n" + "-" * 40)
@@ -43,35 +42,42 @@ try:
     for i, record in enumerate(stream_records(batch_size=10, delay=1)):
         stats_counter['total'] += 1
         
-        # Phase 1: Normalize keys
-        clean = normalize_record(record)
-        
-        # Phase 2: Analyze field patterns
-        analyzer.update(clean)
+        # Phase 1: Analyze field patterns for type ambiguities
+        analyzer.update(record)
         stats = analyzer.get_stats()
         
-        # Phase 3: Enhanced placement heuristics with semantic analysis
+        # Phase 2: Enhanced placement heuristics with semantic analysis
         if len(stats) > 0:  # Only classify if we have stats
             current_decisions, placement_reasons = classify_with_placement_heuristics(stats)
             
             # Store placement reasons for analysis
             if i < 10 and 'detailed_placement' not in locals():
                 detailed_placement = placement_reasons
+            
+            # Update enhanced metadata for each field
+            analyzer_total_stats = {"total": analyzer.total}
+            for field_name, field_stats in stats.items():
+                field_placement = placement_reasons.get(field_name, {})
+                metadata_mgr.update_field_metadata(field_name, field_stats, field_placement, analyzer_total_stats)
         else:
             current_decisions = {}
             placement_reasons = {}
         
-        # Merge: keep existing metadata decisions, add new fields only
+        # Update metadata with new decisions and enhanced metadata
         for field, decision in current_decisions.items():
             if field not in metadata:
                 metadata[field] = decision
         
-        # Save updated metadata
-        with open("metadata.json", "w") as f:
-            json.dump(metadata, f, indent=2, default=lambda x: list(x) if isinstance(x, set) else x)
+        # Update simple metadata cache for next iteration
+        if (i + 1) % 10 == 0:
+            metadata.update(metadata_mgr.get_simple_placement_decisions())
         
-        # Phase 4: Route and store using stable metadata
-        sql_id, mongo_id = storage.store_record(clean, metadata)
+        # Save enhanced metadata every 10 records
+        if (i + 1) % 10 == 0:
+            metadata_mgr.save_metadata()
+        
+        # Phase 3: Route and store using stable metadata
+        sql_id, mongo_id = storage.store_record(record, metadata)
         
         if sql_id:
             stats_counter['sql_stored'] += 1
@@ -101,6 +107,9 @@ except KeyboardInterrupt:
     print("\nInterrupted by user")
 
 finally:
+    # Save final enhanced metadata
+    metadata_mgr.save_metadata()
+    
     # Final statistics
     final_counts = storage.get_stats()
     print("\n" + "=" * 80)
@@ -109,34 +118,36 @@ finally:
     print(f"Records processed:     {stats_counter['total']:>8}")
     print(f"SQL records stored:    {final_counts['sql']:>8}")
     print(f"MongoDB docs stored:   {final_counts['mongo']:>8}")
-    print(f"Metadata saved:        {'metadata.json':>8}")
+    print(f"Enhanced metadata saved:      {'metadata.json':>8}")
     print("=" * 80)
     
-    # Normalization report
-    norm_report = analyzer.get_normalization_report()
+    # Type Ambiguity Report
+    ambiguity_report = analyzer.get_normalization_report()
     print("\n" + "=" * 80)
-    print("                        NORMALIZATION STRATEGY")
+    print("                        TYPE AMBIGUITY ANALYSIS")
     print("=" * 80)
-    print(f"Total raw fields processed: {norm_report['total_raw_fields']:>8}")
-    print(f"Canonical fields created:   {norm_report['canonical_fields']:>8}")
-    print(f"Aliases resolved:           {norm_report['aliases_resolved']:>8}")
-    print(f"Type conflicts detected:    {norm_report['type_conflicts']:>8}")
+    print(f"Total fields processed:          {ambiguity_report['total_fields']:>8}")
+    print(f"Fields with type ambiguity:      {ambiguity_report['fields_with_type_ambiguity']:>8}")
+    print(f"Clean fields (single type):      {len(ambiguity_report['clean_fields']):>8}")
     
-    if norm_report["alias_mappings"]:
-        print(f"\nFIELD NORMALIZATION MAPPINGS:")
-        for canonical, aliases in norm_report["alias_mappings"].items():
-            aliases_str = ", ".join(aliases)
-            print(f"  '{canonical}' <- {{{aliases_str}}}")
+    if ambiguity_report["ambiguous_fields"]:
+        print(f"\nTYPE AMBIGUOUS FIELDS (routed to MongoDB):")
+        for field_name, ambiguity_info in ambiguity_report["ambiguous_fields"].items():
+            types_str = ", ".join(ambiguity_info["types_detected"])
+            print(f"  '{field_name}' has mixed types: [{types_str}]")
     
-    if norm_report["conflicts"]:
-        print(f"\nTYPE CONFLICTS (routed to MongoDB):")
-        for canonical, conflict_info in norm_report["conflicts"].items():
-            types_str = ", ".join(conflict_info["conflicting_types"])
-            raw_names_str = ", ".join(conflict_info["raw_names"])
-            print(f"  '{canonical}' has mixed types [{types_str}] from fields: {raw_names_str}")
+    if ambiguity_report["clean_fields"]:
+        print(f"\nCLEAN FIELDS (suitable for MySQL):")
+        clean_count = 0
+        for field_name, field_info in ambiguity_report["clean_fields"].items():
+            if clean_count < 5:  # Show first 5 examples
+                print(f"  '{field_name}': {field_info['type']} ({field_info['count']} records)")
+                clean_count += 1
+        if len(ambiguity_report["clean_fields"]) > 5:
+            print(f"  ... and {len(ambiguity_report['clean_fields']) - 5} more clean fields")
     
-    if not norm_report["alias_mappings"] and not norm_report["conflicts"]:
-        print("\nNo normalization conflicts - all field names were unique and consistent")
+    if not ambiguity_report["ambiguous_fields"]:
+        print("\nNo type ambiguities detected - all fields have consistent types")
     
     # Field uniqueness analysis
     uniqueness_analysis = analyzer.analyze_field_uniqueness()
@@ -245,6 +256,59 @@ finally:
                 if len(fields) > 5:
                     fields_str += f" + {len(fields)-5} more"
                 print(f"  {pattern}: {fields_str}")
+    
+    # Enhanced Metadata Analysis
+    quality_report = metadata_mgr.get_quality_report()
+    print("\n" + "=" * 80)
+    print("                     ENHANCED METADATA ANALYSIS")
+    print("=" * 80)
+    print(f"Total fields in metadata:        {quality_report['total_fields']:>8}")
+    print(f"Average data quality score:      {quality_report['average_quality_score']:>8.3f}")
+    print(f"Fields needing review:           {quality_report['fields_needing_review']:>8}")
+    print(f"Type ambiguous fields:           {quality_report['type_ambiguous_fields']:>8}")
+    print(f"High drift fields:               {quality_report['high_drift_fields']:>8}")
+    
+    # Sample field summaries
+    print(f"\nSAMPLE FIELD PROFILES:")
+    field_count = 0
+    for field_name in metadata_mgr.field_metadata:
+        if field_count < 5:  # Show first 5 detailed profiles
+            summary = metadata_mgr.get_field_summary(field_name)
+            print(f"  {field_name}:")
+            print(f"    Placement: {summary['placement']}")
+            print(f"    Quality Score: {summary['data_quality_score']:.3f}")
+            print(f"    Type Stability: {summary['type_stability']}")
+            print(f"    Business Criticality: {summary['business_criticality']}")
+            print(f"    Privacy Level: {summary['privacy_level']}")
+            print(f"    Indexing Recommended: {summary['indexing_recommended']}")
+            if summary['manual_review_needed']:
+                print(f"    ⚠️  Manual Review Required")
+            field_count += 1
+        else:
+            break
+    
+    # Schema Recommendations
+    schema_recommendations = metadata_mgr.export_schema_recommendations()
+    print(f"\n" + "=" * 80)
+    print("                      SCHEMA RECOMMENDATIONS")
+    print("=" * 80)
+    
+    print(f"\nMYSQL SCHEMA RECOMMENDATIONS ({len(schema_recommendations['mysql_schema'])}):")
+    for field in schema_recommendations['mysql_schema'][:10]:  # Show first 10
+        nullable = "NULL" if field['nullable'] else "NOT NULL"
+        index_note = " [INDEX]" if field['index_recommended'] else ""
+        print(f"  {field['field']}: {field['type'].upper()} {nullable}{index_note}")
+    
+    print(f"\nMONGODB COLLECTIONS ({len(schema_recommendations['mongodb_collections'])}):")
+    for field in schema_recommendations['mongodb_collections'][:10]:  # Show first 10
+        reason_note = f" ({field['reason']})"
+        ambiguity_note = " [TYPE AMBIGUOUS]" if field['type_ambiguity'] else ""
+        print(f"  {field['field']}{reason_note}{ambiguity_note}")
+    
+    print(f"\nINDEXING RECOMMENDATIONS ({len(schema_recommendations['indexing_recommendations'])}):")
+    for rec in schema_recommendations['indexing_recommendations']:
+        print(f"  {rec['database'].upper()}: {rec['field']} -> {rec['index_type']}")
+        print(f"    Reason: {rec['reasoning']}")
     
     print("=" * 80)
     

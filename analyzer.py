@@ -2,33 +2,53 @@ from collections import defaultdict
 import re
 from drift_detector import TypeDriftDetector
 
-def normalize_field_name(field_name):
+def detect_type_ambiguity(field_name, values_sample):
     """
-    Normalize field names to canonical form: lowercase, snake_case, no special chars.
-    Examples: 'IP' -> 'ip', 'IpAddress' -> 'ip_address', 'ip-address' -> 'ip_address'
+    Detect type ambiguities for the same field across different records.
+    Focus on cases where same field name has different data types.
+    
+    Returns:
+        dict: {
+            'has_type_ambiguity': bool,
+            'types_detected': list,
+            'ambiguity_score': float (0-1, where 1 = high ambiguity)
+        }
     """
-    # Convert to string if not already
-    field_name = str(field_name)
+    if not values_sample:
+        return {
+            'has_type_ambiguity': False,
+            'types_detected': [],
+            'ambiguity_score': 0.0
+        }
     
-    # Replace hyphens and spaces with underscores
-    normalized = re.sub(r'[-\s]+', '_', field_name)
+    # Detect all types present
+    types_found = set()
+    for value in values_sample:
+        try:
+            # Try to determine actual type
+            if isinstance(value, str):
+                # Check if string represents other types
+                if value.isdigit():
+                    types_found.add('potential_int')
+                elif value.replace('.', '').replace('-', '').isdigit():
+                    types_found.add('potential_float')
+                elif value.lower() in ['true', 'false']:
+                    types_found.add('potential_bool')
+                else:
+                    types_found.add('str')
+            else:
+                types_found.add(type(value).__name__)
+        except:
+            types_found.add('unknown')
     
-    # Insert underscores before uppercase letters (camelCase to snake_case)
-    normalized = re.sub(r'([a-z])([A-Z])', r'\1_\2', normalized)
+    has_ambiguity = len(types_found) > 1
+    ambiguity_score = min(1.0, (len(types_found) - 1) / 3.0)  # Normalize to 0-1
     
-    # Convert to lowercase
-    normalized = normalized.lower()
-    
-    # Remove any remaining special characters except underscores
-    normalized = re.sub(r'[^a-z0-9_]', '', normalized)
-    
-    # Clean up multiple underscores
-    normalized = re.sub(r'_+', '_', normalized)
-    
-    # Remove leading/trailing underscores
-    normalized = normalized.strip('_')
-    
-    return normalized or 'field'  # fallback if empty
+    return {
+        'has_type_ambiguity': has_ambiguity,
+        'types_detected': list(types_found),
+        'ambiguity_score': ambiguity_score
+    }
 
 def detect_semantic_type(field_name, values_sample):
     """
@@ -160,15 +180,11 @@ class Analyzer:
             "types": set(),
             "unique": set(),
             "nested": False,
-            "raw_names": set(),
             "batch_history": [],  # Track per-batch presence and types
             "values_sample": set()  # For semantic analysis
         })
-        # Normalization tracking
-        self.canonical_to_aliases = defaultdict(set)  # canonical -> {original_names}
-        self.raw_to_canonical = {}  # original_name -> canonical_name
-        self.column_registry = set()  # canonical names that have been "claimed"
-        self.normalization_conflicts = defaultdict(list)  # canonical -> [(raw_name, type_conflicts)]
+        # Type ambiguity tracking - focus on same field having different types
+        self.type_conflicts = defaultdict(list)  # field_name -> [(value, type, batch)]
         
         # Enhanced drift detection
         self.drift_detector = TypeDriftDetector(window_size=50, drift_threshold=0.20)
@@ -185,28 +201,21 @@ class Analyzer:
                 self._process_batch_drift_detection()
             
             # Initialize batch tracking for all existing fields
-            for canonical in self.stats:
-                self.stats[canonical]["batch_history"].append({
+            for field_name in self.stats:
+                self.stats[field_name]["batch_history"].append({
                     "batch": self.current_batch,
                     "present": False,
                     "types": set()
                 })
 
-        for raw_field, value in record.items():
-            # Normalize the field name
-            canonical = normalize_field_name(raw_field)
-            
-            # Track the mapping
-            self.raw_to_canonical[raw_field] = canonical
-            self.canonical_to_aliases[canonical].add(raw_field)
-            
-            # Use canonical name for stats
-            s = self.stats[canonical]
+        for field_name, value in record.items():
+            # Use original field name - no normalization
+            s = self.stats[field_name]
             s["count"] += 1
-            s["raw_names"].add(raw_field)
             
-            # Type tracking for conflict detection
+            # Type tracking for ambiguity detection
             value_type = type(value).__name__
+            old_types = s["types"].copy()
             s["types"].add(value_type)
             s["unique"].add(str(value))
             
@@ -229,20 +238,18 @@ class Analyzer:
                 })
             
             # Track types per batch for drift detection
-            self.batch_types_tracking[self.current_batch][canonical].add(value_type)
+            self.batch_types_tracking[self.current_batch][field_name].add(value_type)
             
-            # Detect type conflicts for this canonical name
-            if len(s["types"]) > 1:
-                # Multiple types detected for same canonical name
-                type_list = list(s["types"])
-                if canonical not in [conf[0] for conf in self.normalization_conflicts[canonical]]:
-                    self.normalization_conflicts[canonical].append((raw_field, type_list))
+            # Detect type ambiguities - same field with different types
+            if len(s["types"]) > 1 and len(old_types) < len(s["types"]):
+                # New type detected for existing field
+                self.type_conflicts[field_name].append((str(value), value_type, self.current_batch))
 
-    def calculate_stability(self, canonical):
+    def calculate_stability(self, field_name):
         """
         Calculate stability score (0-1) based on consistent presence and type across batches
         """
-        s = self.stats[canonical]
+        s = self.stats[field_name]
         if not s["batch_history"] or len(s["batch_history"]) < 2:
             return 1.0  # Not enough data, assume stable
         
@@ -283,24 +290,27 @@ class Analyzer:
     def get_stats(self):
         result = {}
 
-        for canonical, s in self.stats.items():
+        for field_name, s in self.stats.items():
             uniqueness_ratio = len(s["unique"]) / s["count"] if s["count"] > 0 else 0
             is_unique_field = uniqueness_ratio >= 0.95  # 95% or higher uniqueness
             
-            # Check for type conflicts
-            has_type_conflict = len(s["types"]) > 1
+            # Check for type ambiguities - same field with multiple types
+            has_type_ambiguity = len(s["types"]) > 1
             
             # Calculate stability
-            stability = self.calculate_stability(canonical)
+            stability = self.calculate_stability(field_name)
             
             # Semantic analysis
-            semantic_info = detect_semantic_type(canonical, s["values_sample"])
+            semantic_info = detect_semantic_type(field_name, s["values_sample"])
+            
+            # Type ambiguity analysis
+            ambiguity_info = detect_type_ambiguity(field_name, s["values_sample"])
             
             # Drift analysis
-            drift_analysis = self.drift_detector.calculate_drift_score(canonical)
-            quarantine_check = self.drift_detector.should_quarantine_field(canonical)
+            drift_analysis = self.drift_detector.calculate_drift_score(field_name)
+            quarantine_check = self.drift_detector.should_quarantine_field(field_name)
             
-            # Calculate composite placement score
+            # Calculate composite placement score with type ambiguity penalty
             freq = s["count"] / self.total
             types_count = len(s["types"])
             
@@ -312,7 +322,7 @@ class Analyzer:
             else:
                 uniqueness_weight = 0.0
             
-            # Type consistency weight (1 - abs(types_count - 1)) normalizes to 1.0 for single type
+            # Type consistency weight - penalize multiple types (type ambiguities)
             type_weight = 1.0 - min(abs(types_count - 1), 1.0)
             
             # Composite score (reduced by drift)
@@ -323,56 +333,59 @@ class Analyzer:
                     0.15 * (semantic_info['semantic_weight'] + 0.10) +  # Normalize to positive
                     0.15 * uniqueness_weight) - drift_penalty
             
-            result[canonical] = {
+            result[field_name] = {
                 "freq": freq,
                 "types": s["types"],
                 "unique_count": len(s["unique"]),
                 "uniqueness_ratio": uniqueness_ratio,
                 "is_unique_field": is_unique_field,
                 "nested": s["nested"],
-                "raw_names": s["raw_names"],
-                "has_type_conflict": has_type_conflict,
-                "canonical_name": canonical,
+                "field_name": field_name,
+                "has_type_ambiguity": has_type_ambiguity,
                 "stability": stability,
                 "semantic_info": semantic_info,
+                "ambiguity_info": ambiguity_info,
                 "composite_score": max(0.0, score),  # Ensure non-negative
                 "types_count": types_count,
                 # Drift information
                 "drift_analysis": drift_analysis,
                 "should_quarantine": quarantine_check['should_quarantine'],
                 "quarantine_reason": quarantine_check['reason'],
-                "drift_report": self.drift_detector.generate_drift_report(canonical)
+                "drift_report": self.drift_detector.generate_drift_report(field_name)
             }
 
         return result
     
     def get_normalization_report(self):
         """
-        Generate normalization report showing aliases and conflicts.
-        Returns dict with normalization statistics and conflicts.
+        Generate type ambiguity report showing fields with multiple types.
+        Returns dict with type ambiguity statistics and conflicts.
         """
         report = {
-            "total_raw_fields": len(self.raw_to_canonical),
-            "canonical_fields": len(self.stats),
-            "aliases_resolved": 0,
-            "type_conflicts": len(self.normalization_conflicts),
-            "alias_mappings": {},
-            "conflicts": {}
+            "total_fields": len(self.stats),
+            "fields_with_type_ambiguity": len(self.type_conflicts),
+            "ambiguous_fields": {},
+            "clean_fields": {}
         }
         
-        # Count aliases (canonical names with multiple raw names)
-        for canonical, raw_names in self.canonical_to_aliases.items():
-            if len(raw_names) > 1:
-                report["aliases_resolved"] += 1
-                report["alias_mappings"][canonical] = list(raw_names)
-        
-        # Report type conflicts
-        for canonical, conflicts in self.normalization_conflicts.items():
-            report["conflicts"][canonical] = {
-                "raw_names": list(self.canonical_to_aliases[canonical]),
-                "conflicting_types": list(self.stats[canonical]["types"]),
-                "should_route_to_mongo": True
+        # Report fields with type ambiguities
+        for field_name, conflicts in self.type_conflicts.items():
+            field_types = list(self.stats[field_name]["types"])
+            report["ambiguous_fields"][field_name] = {
+                "types_detected": field_types,
+                "type_conflicts": conflicts,
+                "should_route_to_mongo": True,
+                "reason": "type_ambiguity_detected"
             }
+        
+        # Report clean fields (no type ambiguities)
+        for field_name, stats in self.stats.items():
+            if len(stats["types"]) == 1:
+                report["clean_fields"][field_name] = {
+                    "type": list(stats["types"])[0],
+                    "count": stats["count"],
+                    "suitable_for_mysql": True
+                }
         
         return report
     

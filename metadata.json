@@ -1,55 +1,4632 @@
 {
-  "username": "sql",
-  "phone": "mongo",
-  "ip_address": "sql",
-  "device_id": "sql",
-  "device_model": "sql",
-  "altitude": "sql",
-  "speed": "mongo",
-  "direction": "mongo",
-  "city": "sql",
-  "country": "sql",
-  "timestamp": "sql",
-  "session_id": "sql",
-  "steps": "mongo",
-  "spo2": "sql",
-  "temperature_c": "sql",
-  "humidity": "sql",
-  "air_quality": "sql",
-  "purchase_value": "sql",
-  "item": "mongo",
-  "payment_status": "sql",
-  "language": "mongo",
-  "timezone": "sql",
-  "ram_usage": "sql",
-  "error_code": "mongo",
-  "comment": "mongo",
-  "avatar_url": "sql",
-  "last_seen": "mongo",
-  "name": "sql",
-  "weather": "sql",
-  "action": "mongo",
-  "subscription": "sql",
-  "friends_count": "mongo",
-  "app_version": "mongo",
-  "cpu_usage": "mongo",
-  "disk_usage": "mongo",
-  "email": "mongo",
-  "os": "mongo",
-  "charging": "mongo",
-  "sleep_hours": "mongo",
-  "signal_strength": "mongo",
-  "is_active": "mongo",
-  "metadata": "mongo",
-  "network": "mongo",
-  "gps_lon": "mongo",
-  "is_background": "mongo",
-  "postal_code": "mongo",
-  "mood": "mongo",
-  "retry_count": "mongo",
-  "stress_level": "mongo",
-  "gps_lat": "mongo",
-  "heart_rate": "mongo",
-  "age": "mongo",
-  "battery": "mongo"
+  "username": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "username",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 50.0,
+      "frequency": 1.0,
+      "unique_count": 50,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.7675,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "username",
+      "semantic_weight": 0.15,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "sensitive",
+      "avg_length": 10.22,
+      "max_length": 16,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "sql_strong_candidate",
+      "confidence": 0.9,
+      "decision_factors": {
+        "freq": 1.0,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "username",
+        "composite_score": 0.7675,
+        "types_count": 1,
+        "semantic_weight": 0.15,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 1.0,
+      "consistency": 1.0,
+      "validity": 0.575,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.854
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "critical",
+      "business_importance": "high",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "user_management",
+      "privacy_level": "pii",
+      "retention_policy": "7_years",
+      "compliance_tags": [
+        "GDPR",
+        "CCPA"
+      ]
+    },
+    "last_updated": "2026-02-15T13:29:14.121779"
+  },
+  "name": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "name",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 26.0,
+      "frequency": 0.52,
+      "unique_count": 26,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.6010000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "sensitive",
+      "avg_length": 13.26923076923077,
+      "max_length": 19,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.52,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.6010000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.624,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.722
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "user_management",
+      "privacy_level": "pii",
+      "retention_policy": "7_years",
+      "compliance_tags": [
+        "GDPR",
+        "CCPA"
+      ]
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "email": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "email",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 13.0,
+      "frequency": 0.26,
+      "unique_count": 13,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.5155000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "email",
+      "semantic_weight": 0.15,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "sensitive",
+      "avg_length": 20.846153846153847,
+      "max_length": 26,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.26,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "email",
+        "composite_score": 0.5155000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.15,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.312,
+      "consistency": 1.0,
+      "validity": 0.575,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.647
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "user_management",
+      "privacy_level": "pii",
+      "retention_policy": "7_years",
+      "compliance_tags": [
+        "GDPR",
+        "CCPA"
+      ]
+    },
+    "last_updated": "2026-02-15T13:29:14.125797"
+  },
+  "phone": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "phone",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 16.0,
+      "frequency": 0.32,
+      "unique_count": 16,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.511,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.6666666666666666,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "sensitive",
+      "avg_length": 15.9375,
+      "max_length": 19,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.32,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.511,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.384,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.65
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "user_management",
+      "privacy_level": "pii",
+      "retention_policy": "7_years",
+      "compliance_tags": [
+        "GDPR",
+        "CCPA"
+      ]
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "ip_address": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "ip_address",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 37.0,
+      "frequency": 0.74,
+      "unique_count": 37,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.6895000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "ip",
+      "semantic_weight": 0.15,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "sensitive",
+      "avg_length": 13.216216216216216,
+      "max_length": 15,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "sql_strong_candidate",
+      "confidence": 0.9,
+      "decision_factors": {
+        "freq": 0.74,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "ip",
+        "composite_score": 0.6895000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.15,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.888,
+      "consistency": 1.0,
+      "validity": 0.575,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.82
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "location",
+      "privacy_level": "pii",
+      "retention_policy": "7_years",
+      "compliance_tags": [
+        "GDPR",
+        "CCPA"
+      ]
+    },
+    "last_updated": "2026-02-15T13:29:14.121779"
+  },
+  "device_model": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "device_model",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 45.0,
+      "frequency": 0.9,
+      "unique_count": 4,
+      "uniqueness_ratio": 0.08888888888888889,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.685,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": true,
+      "data_classification": "internal",
+      "avg_length": 9.25,
+      "max_length": 11,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "composite_score_threshold",
+      "confidence": 0.685,
+      "decision_factors": {
+        "freq": 0.9,
+        "uniqueness_ratio": 0.08888888888888889,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.685,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 1.0,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.835
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "important",
+      "business_importance": "medium",
+      "query_optimization_potential": "moderate",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "device",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.121779"
+  },
+  "app_version": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "app_version",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 23.0,
+      "frequency": 0.46,
+      "unique_count": 23,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.553,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 6.0,
+      "max_length": 6,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.46,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.553,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.552,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.701
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "device",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.121779"
+  },
+  "country": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "country",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 39.0,
+      "frequency": 0.78,
+      "unique_count": 35,
+      "uniqueness_ratio": 0.8974358974358975,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.6715,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "public",
+      "avg_length": 12.2,
+      "max_length": 44,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.78,
+        "uniqueness_ratio": 0.8974358974358975,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.6715,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.9359999999999999,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.816
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "good",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "location",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "session_id": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "session_id",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 34.0,
+      "frequency": 0.68,
+      "unique_count": 34,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.6715000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "uuid",
+      "semantic_weight": 0.15,
+      "pattern_confidence": 0.0,
+      "is_identifier": true,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 36.0,
+      "max_length": 36,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "sql_strong_candidate",
+      "confidence": 0.9,
+      "decision_factors": {
+        "freq": 0.68,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "uuid",
+        "composite_score": 0.6715000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.15,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.8160000000000001,
+      "consistency": 1.0,
+      "validity": 0.575,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.799
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "critical",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "primary_or_unique",
+        "reasoning": "Identifier field - excellent for indexing"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "analytics",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "spo2": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "spo2",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 46.0,
+      "frequency": 0.92,
+      "unique_count": 11,
+      "uniqueness_ratio": 0.2391304347826087,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.7060000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 2.090909090909091,
+      "max_length": 3,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "categorical_low_cardinality",
+      "confidence": 0.8,
+      "decision_factors": {
+        "freq": 0.92,
+        "uniqueness_ratio": 0.2391304347826087,
+        "stability": 1.0,
+        "semantic_type": "categorical",
+        "composite_score": 0.7060000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 1.0,
+      "consistency": 1.0,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.848
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "important",
+      "business_importance": "medium",
+      "query_optimization_potential": "moderate",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High frequency - likely queried often"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "temperature_c": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "temperature_c",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 28.999999999999996,
+      "frequency": 0.58,
+      "unique_count": 28,
+      "uniqueness_ratio": 0.9655172413793104,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.6265000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "float"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "float",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "continuous",
+      "semantic_weight": 0.05,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": true,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 3.75,
+      "max_length": 4,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.58,
+        "uniqueness_ratio": 0.9655172413793104,
+        "stability": 1.0,
+        "semantic_type": "continuous",
+        "composite_score": 0.6265000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.05,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.696,
+      "consistency": 1.0,
+      "validity": 0.525,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.75
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "humidity": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "humidity",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 38.0,
+      "frequency": 0.76,
+      "unique_count": 29,
+      "uniqueness_ratio": 0.7631578947368421,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.6729999999999999,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "continuous",
+      "semantic_weight": 0.05,
+      "pattern_confidence": 0.0,
+      "is_identifier": true,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 2.0,
+      "max_length": 2,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.76,
+        "uniqueness_ratio": 0.7631578947368421,
+        "stability": 1.0,
+        "semantic_type": "continuous",
+        "composite_score": 0.6729999999999999,
+        "types_count": 1,
+        "semantic_weight": 0.05,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.9119999999999999,
+      "consistency": 1.0,
+      "validity": 0.525,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.815
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "critical",
+      "business_importance": "medium",
+      "query_optimization_potential": "good",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "primary_or_unique",
+        "reasoning": "Identifier field - excellent for indexing"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "air_quality": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "air_quality",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 36.0,
+      "frequency": 0.72,
+      "unique_count": 4,
+      "uniqueness_ratio": 0.1111111111111111,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.6310000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 6.0,
+      "max_length": 9,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.72,
+        "uniqueness_ratio": 0.1111111111111111,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.6310000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.864,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.794
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "action": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "action",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 26.0,
+      "frequency": 0.52,
+      "unique_count": 5,
+      "uniqueness_ratio": 0.19230769230769232,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.5710000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 5.6,
+      "max_length": 8,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.52,
+        "uniqueness_ratio": 0.19230769230769232,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.5710000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.624,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.722
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.124828"
+  },
+  "purchase_value": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "purchase_value",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 45.0,
+      "frequency": 0.9,
+      "unique_count": 45,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.7225,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "float"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "float",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "continuous",
+      "semantic_weight": 0.05,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 5.666666666666667,
+      "max_length": 6,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.9,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "continuous",
+        "composite_score": 0.7225,
+        "types_count": 1,
+        "semantic_weight": 0.05,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 1.0,
+      "consistency": 1.0,
+      "validity": 0.525,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.841
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "important",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "commerce",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "payment_status": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "payment_status",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 31.0,
+      "frequency": 0.62,
+      "unique_count": 3,
+      "uniqueness_ratio": 0.0967741935483871,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.6010000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": true,
+      "data_classification": "internal",
+      "avg_length": 6.666666666666667,
+      "max_length": 7,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.62,
+        "uniqueness_ratio": 0.0967741935483871,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.6010000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.744,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.758
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "critical",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "commerce",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": [
+        "PCI_DSS"
+      ]
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "timezone": {
+    "creation_timestamp": "2026-02-15T13:23:53.890049",
+    "field_name": "timezone",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 39.0,
+      "frequency": 0.78,
+      "unique_count": 32,
+      "uniqueness_ratio": 0.8205128205128205,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.6715,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "public",
+      "avg_length": 13.71875,
+      "max_length": 20,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.78,
+        "uniqueness_ratio": 0.8205128205128205,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.6715,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.9359999999999999,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.816
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "good",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "location",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "cpu_usage": {
+    "creation_timestamp": "2026-02-15T13:23:53.891279",
+    "field_name": "cpu_usage",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 27.0,
+      "frequency": 0.54,
+      "unique_count": 24,
+      "uniqueness_ratio": 0.8888888888888888,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.607,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "continuous",
+      "semantic_weight": 0.05,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": true,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 1.8333333333333333,
+      "max_length": 2,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.54,
+        "uniqueness_ratio": 0.8888888888888888,
+        "stability": 1.0,
+        "semantic_type": "continuous",
+        "composite_score": 0.607,
+        "types_count": 1,
+        "semantic_weight": 0.05,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.648,
+      "consistency": 1.0,
+      "validity": 0.525,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.736
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "good",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "ram_usage": {
+    "creation_timestamp": "2026-02-15T13:23:53.891279",
+    "field_name": "ram_usage",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 36.0,
+      "frequency": 0.72,
+      "unique_count": 29,
+      "uniqueness_ratio": 0.8055555555555556,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.661,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "continuous",
+      "semantic_weight": 0.05,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": true,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 1.896551724137931,
+      "max_length": 2,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.72,
+        "uniqueness_ratio": 0.8055555555555556,
+        "stability": 1.0,
+        "semantic_type": "continuous",
+        "composite_score": 0.661,
+        "types_count": 1,
+        "semantic_weight": 0.05,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.864,
+      "consistency": 1.0,
+      "validity": 0.525,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.8
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "good",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.123778"
+  },
+  "comment": {
+    "creation_timestamp": "2026-02-15T13:23:53.891279",
+    "field_name": "comment",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 18.0,
+      "frequency": 0.36,
+      "unique_count": 18,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.523,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 36.94444444444444,
+      "max_length": 57,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.36,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.523,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.432,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.665
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.123778"
+  },
+  "avatar_url": {
+    "creation_timestamp": "2026-02-15T13:23:53.891279",
+    "field_name": "avatar_url",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 22.0,
+      "frequency": 0.44,
+      "unique_count": 22,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.547,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 29.727272727272727,
+      "max_length": 31,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.44,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.547,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.528,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.693
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "metadata": {
+    "creation_timestamp": "2026-02-15T13:23:53.891279",
+    "field_name": "metadata",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 26.0,
+      "frequency": 0.52,
+      "unique_count": 25,
+      "uniqueness_ratio": 0.9615384615384616,
+      "is_unique_field": true,
+      "has_nested_data": true,
+      "composite_score": 0.6010000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "dict"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "dict",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 67.08,
+      "max_length": 157,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "nested_structure",
+      "confidence": 1.0,
+      "decision_factors": {
+        "freq": 0.52,
+        "uniqueness_ratio": 0.9615384615384616,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.6010000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.624,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.722
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.123778"
+  },
+  "os": {
+    "creation_timestamp": "2026-02-15T13:23:53.910085",
+    "field_name": "os",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 12.0,
+      "frequency": 0.24,
+      "unique_count": 5,
+      "uniqueness_ratio": 0.4166666666666667,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.48700000000000004,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 5.4,
+      "max_length": 7,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.24,
+        "uniqueness_ratio": 0.4166666666666667,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.48700000000000004,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.288,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.621
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "device",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.123778"
+  },
+  "charging": {
+    "creation_timestamp": "2026-02-15T13:23:53.910085",
+    "field_name": "charging",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 10.0,
+      "frequency": 0.2,
+      "unique_count": 2,
+      "uniqueness_ratio": 0.2,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.42700000000000005,
+      "stability_score": 0.76
+    },
+    "type_analysis": {
+      "detected_types": [
+        "bool"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "bool",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 4.5,
+      "max_length": 5,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.2,
+        "uniqueness_ratio": 0.2,
+        "stability": 0.76,
+        "semantic_type": "unknown",
+        "composite_score": 0.42700000000000005,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.24,
+      "consistency": 0.76,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.547
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.121779"
+  },
+  "gps_lon": {
+    "creation_timestamp": "2026-02-15T13:23:53.910085",
+    "field_name": "gps_lon",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 16.0,
+      "frequency": 0.32,
+      "unique_count": 16,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.526,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "float"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "float",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 9.6875,
+      "max_length": 11,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.32,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "categorical",
+        "composite_score": 0.526,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.384,
+      "consistency": 1.0,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.663
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "location",
+      "privacy_level": "sensitive",
+      "retention_policy": "3_years",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.121779"
+  },
+  "speed": {
+    "creation_timestamp": "2026-02-15T13:23:53.910085",
+    "field_name": "speed",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 22.0,
+      "frequency": 0.44,
+      "unique_count": 22,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.5545,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "float"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "float",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "continuous",
+      "semantic_weight": 0.05,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": true,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 5.045454545454546,
+      "max_length": 6,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.44,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "continuous",
+        "composite_score": 0.5545,
+        "types_count": 1,
+        "semantic_weight": 0.05,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.528,
+      "consistency": 1.0,
+      "validity": 0.525,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.7
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.125797"
+  },
+  "city": {
+    "creation_timestamp": "2026-02-15T13:23:53.910085",
+    "field_name": "city",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 26.0,
+      "frequency": 0.52,
+      "unique_count": 26,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.6010000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "public",
+      "avg_length": 12.576923076923077,
+      "max_length": 17,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.52,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.6010000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.624,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.722
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "location",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.123778"
+  },
+  "timestamp": {
+    "creation_timestamp": "2026-02-15T13:23:53.911446",
+    "field_name": "timestamp",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 43.0,
+      "frequency": 0.86,
+      "unique_count": 40,
+      "uniqueness_ratio": 0.9302325581395349,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.718,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "timestamp",
+      "semantic_weight": 0.15,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 26.0,
+      "max_length": 26,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "sql_strong_candidate",
+      "confidence": 0.9,
+      "decision_factors": {
+        "freq": 0.86,
+        "uniqueness_ratio": 0.9302325581395349,
+        "stability": 1.0,
+        "semantic_type": "timestamp",
+        "composite_score": 0.718,
+        "types_count": 1,
+        "semantic_weight": 0.15,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 1.0,
+      "consistency": 1.0,
+      "validity": 0.575,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.854
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "critical",
+      "business_importance": "medium",
+      "query_optimization_potential": "good",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "analytics",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "stress_level": {
+    "creation_timestamp": "2026-02-15T13:23:53.911446",
+    "field_name": "stress_level",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 4.0,
+      "frequency": 0.08,
+      "unique_count": 3,
+      "uniqueness_ratio": 0.75,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.41350000000000003,
+      "stability_score": 0.76
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": true,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 4.333333333333333,
+      "max_length": 6,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.08,
+        "uniqueness_ratio": 0.75,
+        "stability": 0.76,
+        "semantic_type": "unknown",
+        "composite_score": 0.41350000000000003,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.096,
+      "consistency": 0.76,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.504
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "good",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "health",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.125797"
+  },
+  "subscription": {
+    "creation_timestamp": "2026-02-15T13:23:53.911446",
+    "field_name": "subscription",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 44.0,
+      "frequency": 0.88,
+      "unique_count": 4,
+      "uniqueness_ratio": 0.09090909090909091,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.679,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": true,
+      "data_classification": "internal",
+      "avg_length": 5.25,
+      "max_length": 7,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "composite_score_threshold",
+      "confidence": 0.679,
+      "decision_factors": {
+        "freq": 0.88,
+        "uniqueness_ratio": 0.09090909090909091,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.679,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 1.0,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.835
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "important",
+      "business_importance": "medium",
+      "query_optimization_potential": "moderate",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "commerce",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "disk_usage": {
+    "creation_timestamp": "2026-02-15T13:23:53.911446",
+    "field_name": "disk_usage",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 2.0,
+      "frequency": 0.04,
+      "unique_count": 2,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.37,
+      "stability_score": 0.64
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": true,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 2.0,
+      "max_length": 2,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.04,
+        "uniqueness_ratio": 1.0,
+        "stability": 0.64,
+        "semantic_type": "categorical",
+        "composite_score": 0.37,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "unstable"
+    },
+    "quality_metrics": {
+      "completeness": 0.048,
+      "consistency": 0.64,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.472
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.124828"
+  },
+  "error_code": {
+    "creation_timestamp": "2026-02-15T13:23:53.911446",
+    "field_name": "error_code",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 18.0,
+      "frequency": 0.36,
+      "unique_count": 6,
+      "uniqueness_ratio": 0.3333333333333333,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.275,
+      "stability_score": 0.76
+    },
+    "type_analysis": {
+      "detected_types": [
+        "NoneType",
+        "int"
+      ],
+      "type_count": 2,
+      "has_type_ambiguity": true,
+      "ambiguity_score": 0.3333333333333333,
+      "primary_type": "int",
+      "type_consistency": 0.8
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 3.1666666666666665,
+      "max_length": 4,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "drift_quarantine_multiple_flip_patterns_NoneType\u2192int\u2192NoneType+int\u2192NoneType\u2192int",
+      "confidence": 0.9,
+      "decision_factors": {
+        "freq": 0.36,
+        "uniqueness_ratio": 0.3333333333333333,
+        "stability": 0.76,
+        "semantic_type": "unknown",
+        "composite_score": 0.275,
+        "types_count": 2,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": "multiple_flip_patterns_NoneType\u2192int\u2192NoneType+int\u2192NoneType\u2192int"
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": true,
+      "quarantine_reason": "multiple_flip_patterns_NoneType\u2192int\u2192NoneType+int\u2192NoneType\u2192int",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.432,
+      "consistency": 0.76,
+      "validity": 0.4,
+      "accuracy_estimate": 0.3000000000000001,
+      "data_quality_score": 0.48
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "is_background": {
+    "creation_timestamp": "2026-02-15T13:23:53.911446",
+    "field_name": "is_background",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 8.0,
+      "frequency": 0.16,
+      "unique_count": 2,
+      "uniqueness_ratio": 0.25,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.43900000000000006,
+      "stability_score": 0.88
+    },
+    "type_analysis": {
+      "detected_types": [
+        "bool"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "bool",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 4.5,
+      "max_length": 5,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.16,
+        "uniqueness_ratio": 0.25,
+        "stability": 0.88,
+        "semantic_type": "unknown",
+        "composite_score": 0.43900000000000006,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.192,
+      "consistency": 0.88,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.563
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.126780"
+  },
+  "friends_count": {
+    "creation_timestamp": "2026-02-15T13:23:53.911446",
+    "field_name": "friends_count",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 24.0,
+      "frequency": 0.48,
+      "unique_count": 24,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.5665,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "continuous",
+      "semantic_weight": 0.05,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 3.75,
+      "max_length": 4,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.48,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "continuous",
+        "composite_score": 0.5665,
+        "types_count": 1,
+        "semantic_weight": 0.05,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.576,
+      "consistency": 1.0,
+      "validity": 0.525,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.714
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.125797"
+  },
+  "gps_lat": {
+    "creation_timestamp": "2026-02-15T13:23:53.927513",
+    "field_name": "gps_lat",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 3.0,
+      "frequency": 0.06,
+      "unique_count": 3,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.4,
+      "stability_score": 0.76
+    },
+    "type_analysis": {
+      "detected_types": [
+        "float"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "float",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 10.333333333333334,
+      "max_length": 11,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.06,
+        "uniqueness_ratio": 1.0,
+        "stability": 0.76,
+        "semantic_type": "categorical",
+        "composite_score": 0.4,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.072,
+      "consistency": 0.76,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.509
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "location",
+      "privacy_level": "sensitive",
+      "retention_policy": "3_years",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.125797"
+  },
+  "altitude": {
+    "creation_timestamp": "2026-02-15T13:23:53.927513",
+    "field_name": "altitude",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 30.0,
+      "frequency": 0.6,
+      "unique_count": 30,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.6325000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "float"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "float",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "continuous",
+      "semantic_weight": 0.05,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": true,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 6.433333333333334,
+      "max_length": 7,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.6,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "continuous",
+        "composite_score": 0.6325000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.05,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.72,
+      "consistency": 1.0,
+      "validity": 0.525,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.757
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "weather": {
+    "creation_timestamp": "2026-02-15T13:23:53.928515",
+    "field_name": "weather",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 39.0,
+      "frequency": 0.78,
+      "unique_count": 5,
+      "uniqueness_ratio": 0.1282051282051282,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.649,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "public",
+      "avg_length": 5.2,
+      "max_length": 6,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.78,
+        "uniqueness_ratio": 0.1282051282051282,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.649,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.9359999999999999,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.816
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.123778"
+  },
+  "item": {
+    "creation_timestamp": "2026-02-15T13:23:53.928515",
+    "field_name": "item",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 16.0,
+      "frequency": 0.32,
+      "unique_count": 6,
+      "uniqueness_ratio": 0.375,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.247,
+      "stability_score": 0.6799999999999999
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str",
+        "NoneType"
+      ],
+      "type_count": 2,
+      "has_type_ambiguity": true,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 0.8
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 4.5,
+      "max_length": 6,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "type_ambiguity_detected",
+      "confidence": 0.9,
+      "decision_factors": {
+        "freq": 0.32,
+        "uniqueness_ratio": 0.375,
+        "stability": 0.6799999999999999,
+        "semantic_type": "unknown",
+        "composite_score": 0.247,
+        "types_count": 2,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "unstable"
+    },
+    "quality_metrics": {
+      "completeness": 0.384,
+      "consistency": 0.6799999999999999,
+      "validity": 0.4,
+      "accuracy_estimate": 0.6000000000000001,
+      "data_quality_score": 0.505
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "commerce",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.125797"
+  },
+  "language": {
+    "creation_timestamp": "2026-02-15T13:23:53.928515",
+    "field_name": "language",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 33.0,
+      "frequency": 0.66,
+      "unique_count": 28,
+      "uniqueness_ratio": 0.8484848484848485,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.6355000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 7.357142857142857,
+      "max_length": 16,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "semi_unique_field",
+      "confidence": 0.75,
+      "decision_factors": {
+        "freq": 0.66,
+        "uniqueness_ratio": 0.8484848484848485,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.6355000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.792,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.773
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "good",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "retry_count": {
+    "creation_timestamp": "2026-02-15T13:23:53.928515",
+    "field_name": "retry_count",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 6.0,
+      "frequency": 0.12,
+      "unique_count": 4,
+      "uniqueness_ratio": 0.6666666666666666,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.43600000000000005,
+      "stability_score": 0.85
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 1.0,
+      "max_length": 1,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.12,
+        "uniqueness_ratio": 0.6666666666666666,
+        "stability": 0.85,
+        "semantic_type": "categorical",
+        "composite_score": 0.43600000000000005,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.144,
+      "consistency": 0.85,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.553
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.126780"
+  },
+  "is_active": {
+    "creation_timestamp": "2026-02-15T13:23:53.928515",
+    "field_name": "is_active",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 19.0,
+      "frequency": 0.38,
+      "unique_count": 2,
+      "uniqueness_ratio": 0.10526315789473684,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.529,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "bool"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "bool",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 4.5,
+      "max_length": 5,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.38,
+        "uniqueness_ratio": 0.10526315789473684,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.529,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.45599999999999996,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.672
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.124828"
+  },
+  "last_seen": {
+    "creation_timestamp": "2026-02-15T13:23:53.928515",
+    "field_name": "last_seen",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 23.0,
+      "frequency": 0.46,
+      "unique_count": 23,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.5755,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "timestamp",
+      "semantic_weight": 0.15,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 26.0,
+      "max_length": 26,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.46,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "timestamp",
+        "composite_score": 0.5755,
+        "types_count": 1,
+        "semantic_weight": 0.15,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.552,
+      "consistency": 1.0,
+      "validity": 0.575,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.719
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.125797"
+  },
+  "age": {
+    "creation_timestamp": "2026-02-15T13:23:53.941189",
+    "field_name": "age",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 4.0,
+      "frequency": 0.08,
+      "unique_count": 4,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.406,
+      "stability_score": 0.76
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 2.0,
+      "max_length": 2,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.08,
+        "uniqueness_ratio": 1.0,
+        "stability": 0.76,
+        "semantic_type": "categorical",
+        "composite_score": 0.406,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.096,
+      "consistency": 0.76,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.516
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.123778"
+  },
+  "sleep_hours": {
+    "creation_timestamp": "2026-02-15T13:23:53.942258",
+    "field_name": "sleep_hours",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 20.0,
+      "frequency": 0.4,
+      "unique_count": 18,
+      "uniqueness_ratio": 0.9,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.5725,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "float"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "float",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 3.0,
+      "max_length": 3,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.4,
+        "uniqueness_ratio": 0.9,
+        "stability": 1.0,
+        "semantic_type": "categorical",
+        "composite_score": 0.5725,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.48,
+      "consistency": 1.0,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.692
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "good",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "health",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.122778"
+  },
+  "device_id": {
+    "creation_timestamp": "2026-02-15T13:23:53.955261",
+    "field_name": "device_id",
+    "placement_decision": "sql",
+    "data_profile": {
+      "total_records": 37.0,
+      "frequency": 0.74,
+      "unique_count": 37,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.6895000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "uuid",
+      "semantic_weight": 0.15,
+      "pattern_confidence": 0.0,
+      "is_identifier": true,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 36.0,
+      "max_length": 36,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "sql_strong_candidate",
+      "confidence": 0.9,
+      "decision_factors": {
+        "freq": 0.74,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "uuid",
+        "composite_score": 0.6895000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.15,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": false
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.888,
+      "consistency": 1.0,
+      "validity": 0.575,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.82
+    },
+    "usage_statistics": {
+      "access_frequency": "high",
+      "criticality": "critical",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "primary_or_unique",
+        "reasoning": "Identifier field - excellent for indexing"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "device",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.121779"
+  },
+  "direction": {
+    "creation_timestamp": "2026-02-15T13:23:53.955261",
+    "field_name": "direction",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 14.000000000000002,
+      "frequency": 0.28,
+      "unique_count": 4,
+      "uniqueness_ratio": 0.2857142857142857,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.49900000000000005,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 1.0,
+      "max_length": 1,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.28,
+        "uniqueness_ratio": 0.2857142857142857,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.49900000000000005,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.336,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.636
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.123778"
+  },
+  "heart_rate": {
+    "creation_timestamp": "2026-02-15T13:23:53.956258",
+    "field_name": "heart_rate",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 9.0,
+      "frequency": 0.18,
+      "unique_count": 9,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.4600000000000001,
+      "stability_score": 0.88
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": true,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 2.7777777777777777,
+      "max_length": 3,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.18,
+        "uniqueness_ratio": 1.0,
+        "stability": 0.88,
+        "semantic_type": "categorical",
+        "composite_score": 0.4600000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.216,
+      "consistency": 0.88,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.582
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "health",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.123778"
+  },
+  "battery": {
+    "creation_timestamp": "2026-02-15T13:23:53.987596",
+    "field_name": "battery",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 4.0,
+      "frequency": 0.08,
+      "unique_count": 4,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.406,
+      "stability_score": 0.76
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 2.0,
+      "max_length": 2,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.08,
+        "uniqueness_ratio": 1.0,
+        "stability": 0.76,
+        "semantic_type": "categorical",
+        "composite_score": 0.406,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.096,
+      "consistency": 0.76,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.516
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "device",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.126780"
+  },
+  "network": {
+    "creation_timestamp": "2026-02-15T13:23:53.987596",
+    "field_name": "network",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 27.0,
+      "frequency": 0.54,
+      "unique_count": 5,
+      "uniqueness_ratio": 0.18518518518518517,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.5770000000000001,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 4.6,
+      "max_length": 8,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.54,
+        "uniqueness_ratio": 0.18518518518518517,
+        "stability": 1.0,
+        "semantic_type": "unknown",
+        "composite_score": 0.5770000000000001,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.648,
+      "consistency": 1.0,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.729
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.121779"
+  },
+  "steps": {
+    "creation_timestamp": "2026-02-15T13:23:54.003953",
+    "field_name": "steps",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 21.0,
+      "frequency": 0.42,
+      "unique_count": 21,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.5485,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "continuous",
+      "semantic_weight": 0.05,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 4.190476190476191,
+      "max_length": 5,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.42,
+        "uniqueness_ratio": 1.0,
+        "stability": 1.0,
+        "semantic_type": "continuous",
+        "composite_score": 0.5485,
+        "types_count": 1,
+        "semantic_weight": 0.05,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.504,
+      "consistency": 1.0,
+      "validity": 0.525,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.692
+    },
+    "usage_statistics": {
+      "access_frequency": "medium",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "health",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.125797"
+  },
+  "signal_strength": {
+    "creation_timestamp": "2026-02-15T13:23:55.119833",
+    "field_name": "signal_strength",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 15.0,
+      "frequency": 0.3,
+      "unique_count": 5,
+      "uniqueness_ratio": 0.3333333333333333,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.52,
+      "stability_score": 1.0
+    },
+    "type_analysis": {
+      "detected_types": [
+        "int"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "int",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 1.0,
+      "max_length": 1,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.3,
+        "uniqueness_ratio": 0.3333333333333333,
+        "stability": 1.0,
+        "semantic_type": "categorical",
+        "composite_score": 0.52,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.36,
+      "consistency": 1.0,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.656
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "device",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.124828"
+  },
+  "mood": {
+    "creation_timestamp": "2026-02-15T13:23:55.227341",
+    "field_name": "mood",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 7.000000000000001,
+      "frequency": 0.14,
+      "unique_count": 4,
+      "uniqueness_ratio": 0.5714285714285714,
+      "is_unique_field": false,
+      "has_nested_data": false,
+      "composite_score": 0.43300000000000005,
+      "stability_score": 0.88
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "unknown",
+      "semantic_weight": 0.0,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 6.0,
+      "max_length": 7,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.14,
+        "uniqueness_ratio": 0.5714285714285714,
+        "stability": 0.88,
+        "semantic_type": "unknown",
+        "composite_score": 0.43300000000000005,
+        "types_count": 1,
+        "semantic_weight": 0.0,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.168,
+      "consistency": 0.88,
+      "validity": 0.5,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.555
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "low",
+      "indexing_recommendation": {
+        "should_index": false,
+        "index_type": "none",
+        "reasoning": "Low indexing priority"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "general",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.123778"
+  },
+  "postal_code": {
+    "creation_timestamp": "2026-02-15T13:23:55.259334",
+    "field_name": "postal_code",
+    "placement_decision": "mongo",
+    "data_profile": {
+      "total_records": 3.0,
+      "frequency": 0.06,
+      "unique_count": 3,
+      "uniqueness_ratio": 1.0,
+      "is_unique_field": true,
+      "has_nested_data": false,
+      "composite_score": 0.4,
+      "stability_score": 0.76
+    },
+    "type_analysis": {
+      "detected_types": [
+        "str"
+      ],
+      "type_count": 1,
+      "has_type_ambiguity": false,
+      "ambiguity_score": 0.0,
+      "primary_type": "str",
+      "type_consistency": 1.0
+    },
+    "semantic_analysis": {
+      "detected_kind": "categorical",
+      "semantic_weight": 0.1,
+      "pattern_confidence": 0.0,
+      "is_identifier": false,
+      "is_measurement": false,
+      "is_categorical": false,
+      "data_classification": "internal",
+      "avg_length": 5.0,
+      "max_length": 5,
+      "is_long_text": false
+    },
+    "placement_reasoning": {
+      "reason": "flexible_schema_default",
+      "confidence": 0.6,
+      "decision_factors": {
+        "freq": 0.06,
+        "uniqueness_ratio": 1.0,
+        "stability": 0.76,
+        "semantic_type": "categorical",
+        "composite_score": 0.4,
+        "types_count": 1,
+        "semantic_weight": 0.1,
+        "drift_score": 0.0,
+        "quarantine_reason": null
+      },
+      "override_applied": false,
+      "manual_review_needed": true
+    },
+    "drift_tracking": {
+      "drift_score": 0.0,
+      "should_quarantine": false,
+      "quarantine_reason": "stable",
+      "drift_history": [],
+      "stability_trend": "mostly_stable"
+    },
+    "quality_metrics": {
+      "completeness": 0.072,
+      "consistency": 0.76,
+      "validity": 0.55,
+      "accuracy_estimate": 0.8,
+      "data_quality_score": 0.509
+    },
+    "usage_statistics": {
+      "access_frequency": "low",
+      "criticality": "standard",
+      "business_importance": "medium",
+      "query_optimization_potential": "excellent",
+      "indexing_recommendation": {
+        "should_index": true,
+        "index_type": "standard",
+        "reasoning": "High uniqueness - good index candidate"
+      }
+    },
+    "schema_evolution": [],
+    "business_context": {
+      "domain": "device",
+      "privacy_level": "standard",
+      "retention_policy": "indefinite",
+      "compliance_tags": []
+    },
+    "last_updated": "2026-02-15T13:29:14.125797"
+  }
 }
