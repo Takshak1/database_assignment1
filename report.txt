@@ -457,7 +457,6 @@ user JSON requests into full SQL + Mongo plans, detailing JOIN paths,
 parameter placeholders, and merge strategies so clients never author raw
 queries while maintaining full transparency for operators.
 
-===============================================================================
 8. LESSONS LEARNED & FUTURE ENHANCEMENTS
 ===============================================================================
 
@@ -503,6 +502,34 @@ and performance through intelligent pattern recognition and adaptive routing.
 Technical contributions include advanced normalization strategies, multi-signal 
 composite scoring, real-time drift detection, and innovative bi-temporal join 
 architectures that collectively enable truly autonomous data management.
+
+===============================================================================
+10. SOURCES OF INFORMATION
+===============================================================================
+
+Primary documentation and research materials that guided the implementation:
+
+1. **PostgreSQL 16 Documentation – Tables, Constraints, and Normal Forms**  
+  Reference for designing the SQL normalization engine, primary-key
+  generation, and foreign-key relationship synthesis.
+2. **MongoDB Manual – Data Modeling and Schema Design Patterns**  
+  Guided the embed vs. reference heuristics that power the Mongo document
+  strategy engine.
+3. **FastAPI Official Tutorial & Advanced User Guide**  
+  Informed the design of the schema registry API, ingestion endpoint, and
+  CRUD orchestration layers.
+4. **Pydantic v2 Migration Notes & BaseModel Reference**  
+  Used to model request/response DTOs with validation rules that mirror the
+  metadata catalog.
+5. **MySQL Connector/Python Developer Guide**  
+  Provided best practices for executing multi-statement transactions during
+  hybrid CRUD execution.
+6. **Apache Kafka & Polyglot Persistence whitepapers (Confluent)**  
+  Influenced the system-level architecture for buffer queues and hybrid
+  storage placement strategies.
+
+These references are cited throughout the code comments and README to ensure
+traceability between academic principles and the implemented system behavior.
 
 ===============================================================================
 END OF REPORT
