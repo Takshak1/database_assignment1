@@ -204,7 +204,6 @@ class SQLNormalizationEngine:
             "to_table": parent_table,
             "to_column": parent_pk,
         }
-        # Avoid duplicates
         if relation not in child["foreign_keys"]:
             child["foreign_keys"].append(relation)
         return relation
@@ -218,7 +217,6 @@ class SQLNormalizationEngine:
         if parent_path in container_map:
             return container_map[parent_path]
         if parent_path:
-            # Try progressively removing segments
             segments = parent_path.split(".")
             while segments:
                 candidate = ".".join(segments)

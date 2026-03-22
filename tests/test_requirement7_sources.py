@@ -1,5 +1,3 @@
-"""Requirement 7: Documentation sources enumerated in the report."""
-
 from __future__ import annotations
 
 from pathlib import Path

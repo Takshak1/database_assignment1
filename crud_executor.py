@@ -6,9 +6,9 @@ import os
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
-try:  # pragma: no cover - optional dependency
+try:  
     from dotenv import load_dotenv
-except Exception:  # pragma: no cover
+except Exception:  
     def load_dotenv() -> bool:
         return False
 
@@ -32,15 +32,15 @@ DEFAULT_MONGO_CONFIG = {
     "collection": os.getenv("MONGO_COLLECTION", "logs"),
 }
 
-try:  # pragma: no cover - optional dependency at runtime
+try:  
     import mysql.connector as mysql_connector
-except Exception:  # pragma: no cover
-    mysql_connector = None  # type: ignore
+except Exception:  
+    mysql_connector = None  
 
-try:  # pragma: no cover - optional dependency at runtime
+try:  
     from pymongo import MongoClient
-except Exception:  # pragma: no cover
-    MongoClient = None  # type: ignore
+except Exception:  
+    MongoClient = None  
 
 
 @dataclass
@@ -80,9 +80,7 @@ class HybridCRUDExecutor:
         self.mysql_config = mysql_config or DEFAULT_MYSQL_CONFIG
         self.mongo_config = mongo_config or DEFAULT_MONGO_CONFIG
 
-    # ------------------------------------------------------------------
-    # Public API
-    # ------------------------------------------------------------------
+    
     def execute(
         self,
         schema_id: int,
@@ -139,9 +137,7 @@ class HybridCRUDExecutor:
             )
         raise ValueError(f"Unsupported CRUD operation: {operation}")
 
-    # ------------------------------------------------------------------
-    # Insert flow
-    # ------------------------------------------------------------------
+    
     def _handle_insert(self, schema_id: int, payload: Dict[str, Any], *, execute: bool) -> Dict[str, Any]:
         schema = self.registry.get_schema(schema_id)
         storage_strategy = schema.get("storage_strategy") or {}
@@ -288,9 +284,7 @@ class HybridCRUDExecutor:
             client.close()
         return {"documents_inserted": len(details), "details": details}
 
-    # ------------------------------------------------------------------
-    # Read flow
-    # ------------------------------------------------------------------
+ 
     def _handle_read(
         self,
         schema_id: int,
@@ -369,9 +363,6 @@ class HybridCRUDExecutor:
         return results
 
 
-    # ------------------------------------------------------------------
-    # Update / delete
-    # ------------------------------------------------------------------
     def _handle_update(
         self,
         schema_id: int,
@@ -390,7 +381,6 @@ class HybridCRUDExecutor:
                 "insert": insert_result,
             }
 
-        # Advanced: generate targeted updates
         schema = self.registry.get_schema(schema_id)
         storage_strategy = schema.get("storage_strategy") or {}
         blueprint = schema.get("sql_blueprint") or schema.get("analysis", {}).get("sql_blueprint")
@@ -492,7 +482,7 @@ class HybridCRUDExecutor:
         try:
             for item in plan:
                 collection = item["collection"]
-                update_doc = {"$set": {}}  # type: ignore
+                update_doc = {"$set": {}}  
                 for field_path, value in item["set"].items():
                     update_doc["$set"][field_path] = value
                 result = db[collection].update_many(filters or {}, update_doc)
@@ -613,9 +603,7 @@ class HybridCRUDExecutor:
             client.close()
         return results
 
-    # ------------------------------------------------------------------
     # Helper utilities
-    # ------------------------------------------------------------------
     def _group_mappings_by_table(self, mappings: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
         grouped: Dict[str, List[Dict[str, Any]]] = {}
         for mapping in mappings:

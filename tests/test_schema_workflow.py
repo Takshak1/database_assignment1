@@ -1,5 +1,4 @@
 """End-to-end tests covering schema registration, planning, CRUD, and aggregation."""
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -72,7 +71,7 @@ def test_crud_executor_returns_read_plan(registry: SchemaRegistry) -> None:
         execute=False,
     )
 
-    details = result.details  # type: ignore[attr-defined]
+    details = result.details 
     assert "sql" in details
     assert "note" in details
     assert details["merge"]
