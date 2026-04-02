@@ -38,9 +38,9 @@ class FieldLocation:
 
 
 class CRUDQueryEngine:
-    """Plans CRUD (starting with READ) operations based on registry metadata."""
+    """Plans CRUD operations based on registry metadata."""
 
-    SUPPORTED_OPERATIONS = {"read"}
+    SUPPORTED_OPERATIONS = {"read", "insert", "update", "delete", "create"}
 
     def __init__(
         self,
@@ -57,18 +57,53 @@ class CRUDQueryEngine:
     # ------------------------------------------------------------------
     def plan_query(self, schema_id: int, request: Dict[str, Any]) -> Dict[str, Any]:
         operation = (request.get("operation") or "read").lower()
+        if operation == "create":
+            operation = "insert"
         if operation not in self.SUPPORTED_OPERATIONS:
             raise ValueError(f"Operation '{operation}' is not supported yet")
-
-        fields = request.get("fields") or []
-        filters = request.get("filters") or {}
-        limit = request.get("limit")
 
         schema = self.registry.get_schema(schema_id)
         blueprint = schema.get("sql_blueprint") or schema.get("analysis", {}).get("sql_blueprint")
         storage_strategy = schema.get("storage_strategy") or {}
         field_map = self._build_field_map(storage_strategy)
         table_map = self._build_table_map(blueprint)
+
+        if operation == "insert":
+            payload = request.get("payload") or {}
+            return self._plan_insert(
+                schema_id=schema_id,
+                payload=payload,
+                storage_strategy=storage_strategy,
+                blueprint=blueprint,
+            )
+
+        if operation == "update":
+            payload = request.get("payload") or {}
+            filters = request.get("filters") or {}
+            strategy = (request.get("strategy") or "simple").lower()
+            return self._plan_update(
+                schema_id=schema_id,
+                payload=payload,
+                filters=filters,
+                strategy=strategy,
+                storage_strategy=storage_strategy,
+                blueprint=blueprint,
+            )
+
+        if operation == "delete":
+            filters = request.get("filters") or {}
+            strategy = (request.get("strategy") or "entity").lower()
+            return self._plan_delete(
+                schema_id=schema_id,
+                filters=filters,
+                strategy=strategy,
+                storage_strategy=storage_strategy,
+                blueprint=blueprint,
+            )
+
+        fields = request.get("fields") or []
+        filters = request.get("filters") or {}
+        limit = request.get("limit")
 
         field_locations: List[FieldLocation] = []
         sql_requirements: Dict[str, Set[str]] = {}
@@ -499,6 +534,349 @@ class CRUDQueryEngine:
             "example": sample,
             "requested_fields": requested_fields,
         }
+
+    # ------------------------------------------------------------------
+    # Write planning (insert / update / delete)
+    # ------------------------------------------------------------------
+    def _plan_insert(
+        self,
+        *,
+        schema_id: int,
+        payload: Dict[str, Any],
+        storage_strategy: Dict[str, Any],
+        blueprint: Optional[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        sql_plan = self._plan_sql_inserts(payload, storage_strategy, blueprint)
+        mongo_plan = self._plan_mongo_docs(payload, storage_strategy)
+        return {
+            "schema_id": schema_id,
+            "operation": "insert",
+            "sql": sql_plan,
+            "mongo": mongo_plan,
+            "consistency": {
+                "join_keys": sql_plan.get("foreign_keys", {}),
+                "metadata_source": "schema_storage_strategies",
+            },
+        }
+
+    def _plan_update(
+        self,
+        *,
+        schema_id: int,
+        payload: Dict[str, Any],
+        filters: Dict[str, Any],
+        strategy: str,
+        storage_strategy: Dict[str, Any],
+        blueprint: Optional[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        if strategy == "simple":
+            delete_plan = self._plan_delete(
+                schema_id=schema_id,
+                filters=filters,
+                strategy="entity",
+                storage_strategy=storage_strategy,
+                blueprint=blueprint,
+            )
+            insert_plan = self._plan_insert(
+                schema_id=schema_id,
+                payload=payload,
+                storage_strategy=storage_strategy,
+                blueprint=blueprint,
+            )
+            return {
+                "schema_id": schema_id,
+                "operation": "update",
+                "strategy": "simple",
+                "delete": delete_plan,
+                "insert": insert_plan,
+                "consistency": {
+                    "mode": "delete_then_insert",
+                    "notes": "Maintains schema consistency by replaying normalized insert flow",
+                },
+            }
+
+        sql_updates, mongo_updates = self._plan_advanced_updates(payload, storage_strategy)
+        return {
+            "schema_id": schema_id,
+            "operation": "update",
+            "strategy": "advanced",
+            "filters": filters,
+            "sql": sql_updates,
+            "mongo": mongo_updates,
+            "consistency": {
+                "mode": "targeted_update",
+                "notes": "Applies field-level updates using metadata mappings",
+            },
+        }
+
+    def _plan_delete(
+        self,
+        *,
+        schema_id: int,
+        filters: Dict[str, Any],
+        strategy: str,
+        storage_strategy: Dict[str, Any],
+        blueprint: Optional[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        effective_filters = filters if strategy != "sub-entity" else (filters.get("criteria") or {})
+        if strategy == "sub-entity":
+            target = filters.get("target")
+            sql_plan = self._plan_subentity_delete(target, blueprint)
+            mongo_plan = self._plan_subentity_mongo_delete(target, storage_strategy)
+        else:
+            sql_plan = self._plan_entity_delete(blueprint)
+            mongo_plan = self._plan_entity_mongo_delete(storage_strategy)
+
+        return {
+            "schema_id": schema_id,
+            "operation": "delete",
+            "strategy": strategy,
+            "filters": effective_filters,
+            "sql": sql_plan,
+            "mongo": mongo_plan,
+            "consistency": {
+                "cascade": strategy != "sub-entity",
+                "notes": "Delete order is child-to-parent for SQL and mapped collections for Mongo",
+            },
+        }
+
+    def _plan_sql_inserts(
+        self,
+        payload: Dict[str, Any],
+        storage_strategy: Dict[str, Any],
+        blueprint: Optional[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        if not blueprint:
+            return {"tables": [], "rows": {}, "foreign_keys": {}}
+
+        table_map = {table["name"]: table for table in blueprint.get("tables", [])}
+        relationships = blueprint.get("relationships", [])
+        table_order = self._table_insertion_order(blueprint)
+        mappings = storage_strategy.get("mappings", {}).get("fields", [])
+        grouped = self._group_mappings_by_table(mappings)
+
+        rows: Dict[str, List[Dict[str, Any]]] = {}
+        for table_name in table_order:
+            table = table_map.get(table_name)
+            table_mappings = grouped.get(table_name, [])
+            anchor_path = self._find_anchor_path(table)
+            source_records = self._source_records(payload, anchor_path)
+            table_rows: List[Dict[str, Any]] = []
+            for record in source_records:
+                row: Dict[str, Any] = {}
+                for mapping in table_mappings:
+                    column = mapping.get("column")
+                    field_path = mapping.get("field_path")
+                    if not column:
+                        continue
+                    value = self._resolve_relative_value(record, field_path, anchor_path)
+                    if value is not None:
+                        row[column] = value
+                table_rows.append(row)
+            rows[table_name] = table_rows or [{}]
+
+        fk_hints = self._build_fk_hints(relationships)
+        return {
+            "order": table_order,
+            "rows": rows,
+            "foreign_keys": fk_hints,
+        }
+
+    def _plan_mongo_docs(self, payload: Dict[str, Any], storage_strategy: Dict[str, Any]) -> Dict[str, Any]:
+        mappings = storage_strategy.get("mappings", {}).get("fields", [])
+        docs: Dict[str, Dict[str, Any]] = {}
+        for mapping in mappings:
+            if (mapping.get("decision") or "sql").lower() != "mongo":
+                continue
+            collection = mapping.get("collection") or mapping.get("target_collection")
+            field_path = mapping.get("field_path")
+            if not collection or not field_path:
+                continue
+            value = self._resolve_value(payload, field_path)
+            if value is None:
+                continue
+            docs.setdefault(collection, {})
+            self._assign_nested_value(docs[collection], field_path.split("."), value)
+        return {"collections": docs}
+
+    def _plan_advanced_updates(
+        self,
+        payload: Dict[str, Any],
+        storage_strategy: Dict[str, Any],
+    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        mappings = storage_strategy.get("mappings", {}).get("fields", [])
+        sql_updates: Dict[str, Dict[str, Any]] = {}
+        mongo_updates: Dict[str, Dict[str, Any]] = {}
+        for mapping in mappings:
+            decision = (mapping.get("decision") or "sql").lower()
+            field_path = mapping.get("field_path")
+            if not field_path:
+                continue
+            value = self._resolve_value(payload, field_path)
+            if value is None:
+                continue
+            if decision == "sql":
+                table = mapping.get("table")
+                column = mapping.get("column")
+                if table and column:
+                    sql_updates.setdefault(table, {})[column] = value
+            elif decision == "mongo":
+                collection = mapping.get("collection") or mapping.get("target_collection")
+                if collection:
+                    mongo_updates.setdefault(collection, {})[field_path] = value
+
+        return (
+            [{"table": table, "set": columns} for table, columns in sql_updates.items()],
+            [{"collection": collection, "set": fields} for collection, fields in mongo_updates.items()],
+        )
+
+    def _plan_entity_delete(self, blueprint: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+        if not blueprint:
+            return {"tables": []}
+        order = list(reversed(self._table_insertion_order(blueprint)))
+        return {"tables": order}
+
+    def _plan_subentity_delete(self, target: Optional[str], blueprint: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+        if not target or not blueprint:
+            return {"tables": []}
+        table_map = {table["name"]: table for table in blueprint.get("tables", [])}
+        if target not in table_map:
+            return {"tables": []}
+        return {"tables": [target]}
+
+    def _plan_entity_mongo_delete(self, storage_strategy: Dict[str, Any]) -> Dict[str, Any]:
+        collections = set()
+        for mapping in storage_strategy.get("mappings", {}).get("fields", []):
+            if (mapping.get("decision") or "sql").lower() == "mongo":
+                collections.add(mapping.get("collection") or mapping.get("target_collection"))
+        return {"collections": sorted(c for c in collections if c)}
+
+    def _plan_subentity_mongo_delete(self, target: Optional[str], storage_strategy: Dict[str, Any]) -> Dict[str, Any]:
+        if not target:
+            return {"collections": []}
+        collections = set()
+        for mapping in storage_strategy.get("mappings", {}).get("fields", []):
+            collection = mapping.get("collection") or mapping.get("target_collection")
+            table = mapping.get("table")
+            if target in {collection, table} and collection:
+                collections.add(collection)
+        if collections:
+            return {"collections": sorted(collections)}
+        return {"collections": [target]}
+
+    # ------------------------------------------------------------------
+    # Shared write helpers
+    # ------------------------------------------------------------------
+    def _group_mappings_by_table(self, mappings: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
+        grouped: Dict[str, List[Dict[str, Any]]] = {}
+        for mapping in mappings:
+            table = mapping.get("table")
+            if not table:
+                continue
+            grouped.setdefault(table, []).append(mapping)
+        return grouped
+
+    def _find_anchor_path(self, table: Optional[Dict[str, Any]]) -> Optional[str]:
+        if not table:
+            return None
+        for source in table.get("sources", []):
+            if source and "." not in source:
+                return source
+        return None
+
+    def _source_records(self, payload: Dict[str, Any], anchor: Optional[str]) -> List[Any]:
+        if not anchor:
+            return [payload]
+        value = self._resolve_value(payload, anchor)
+        if value is None:
+            return [payload]
+        if isinstance(value, list):
+            return value
+        return [value]
+
+    def _resolve_relative_value(
+        self,
+        source: Any,
+        field_path: Optional[str],
+        anchor_path: Optional[str],
+    ) -> Any:
+        if not field_path:
+            return None
+        relative = field_path
+        if anchor_path and field_path.startswith(anchor_path + "."):
+            relative = field_path[len(anchor_path) + 1 :]
+        return self._resolve_value(source, relative)
+
+    def _resolve_value(self, data: Any, path: Optional[str]) -> Any:
+        if path is None or path == "":
+            return data
+        tokens = [token for token in path.split(".") if token]
+        return self._resolve_tokens(data, tokens)
+
+    def _resolve_tokens(self, current: Any, tokens: List[str]) -> Any:
+        if not tokens:
+            return current
+        if current is None:
+            return None
+        token = tokens[0]
+        rest = tokens[1:]
+        if isinstance(current, list):
+            aggregated: List[Any] = []
+            for item in current:
+                value = self._resolve_tokens(item, tokens)
+                if isinstance(value, list):
+                    aggregated.extend(value)
+                elif value is not None:
+                    aggregated.append(value)
+            return aggregated
+        if isinstance(current, dict):
+            return self._resolve_tokens(current.get(token), rest)
+        return None
+
+    def _assign_nested_value(self, document: Dict[str, Any], path_tokens: List[str], value: Any) -> None:
+        target = document
+        for token in path_tokens[:-1]:
+            target = target.setdefault(token, {})
+        target[path_tokens[-1]] = value
+
+    def _table_insertion_order(self, blueprint: Dict[str, Any]) -> List[str]:
+        tables = [table["name"] for table in blueprint.get("tables", [])]
+        root = blueprint.get("root_table") or (tables[0] if tables else None)
+        relationships = blueprint.get("relationships", [])
+        order: List[str] = []
+        visited = set()
+
+        def visit(table: str) -> None:
+            if table in visited:
+                return
+            parent = self._parent_table(table, relationships)
+            if parent:
+                visit(parent)
+            visited.add(table)
+            order.append(table)
+
+        for table in tables:
+            visit(table)
+        if root and root in order:
+            order.remove(root)
+            order.insert(0, root)
+        return order
+
+    def _parent_table(self, table: str, relationships: List[Dict[str, Any]]) -> Optional[str]:
+        for relation in relationships:
+            if relation.get("from_table") == table:
+                return relation.get("to_table")
+        return None
+
+    def _build_fk_hints(self, relationships: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+        hints: Dict[str, Dict[str, Any]] = {}
+        for relation in relationships:
+            hints[relation["from_table"]] = {
+                "parent_table": relation["to_table"],
+                "from_column": relation["from_column"],
+                "to_column": relation["to_column"],
+            }
+        return hints
 
 
 __all__ = ["CRUDQueryEngine"]

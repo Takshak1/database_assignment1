@@ -32,7 +32,7 @@ if metadata:
 print("\n" + "-" * 40)
 print("PROCESSING RECORDS")
 print("-" * 40)
-stats_counter = {'total': 0, 'sql_stored': 0, 'mongo_stored': 0}
+stats_counter = {'total': 0, 'sql_stored': 0, 'mongo_stored': 0, 'buffered_fields': 0}
 
 try:
     for i, record in enumerate(stream_records(batch_size=10, delay=1)):
@@ -65,16 +65,18 @@ try:
         if (i + 1) % 10 == 0:
             metadata_mgr.save_metadata()
         
-        sql_id, mongo_id = storage.store_record(record, metadata)
+        sql_id, mongo_id, buffer_ids = storage.store_record(record, metadata)
         
         if sql_id:
             stats_counter['sql_stored'] += 1
         if mongo_id:
             stats_counter['mongo_stored'] += 1
+        if buffer_ids:
+            stats_counter['buffered_fields'] += len(buffer_ids)
         
         if (i + 1) % 10 == 0:
             counts = storage.get_stats()
-            print(f"Processed: {i+1} | SQL: {counts['sql']} | MongoDB: {counts['mongo']}")
+            print(f"Processed: {i+1} | SQL: {counts['sql']} | MongoDB: {counts['mongo']} | Buffer: {counts['buffer']}")
         
         if i < 3:
             sql_fields = [f for f, d in metadata.items() if d == 'sql']
@@ -82,7 +84,8 @@ try:
             print(f"\nRecord #{i+1}:")
             print(f"  SQL fields: {sql_fields}")
             print(f"  Mongo fields: {mongo_fields}")
-            print(f"  IDs: SQL={sql_id}, Mongo={mongo_id}")
+            buffer_note = f", Buffered fields: {len(buffer_ids)}" if buffer_ids else ""
+            print(f"  IDs: SQL={sql_id}, Mongo={mongo_id}{buffer_note}")
         
         if i >= 49:
             print(f"Processed {i+1} records, stopping.")
@@ -101,6 +104,7 @@ finally:
     print(f"Records processed:     {stats_counter['total']:>8}")
     print(f"SQL records stored:    {final_counts['sql']:>8}")
     print(f"MongoDB docs stored:   {final_counts['mongo']:>8}")
+    print(f"Buffered field rows:   {final_counts.get('buffer', 0):>8}")
     print(f"Enhanced metadata saved:      {'metadata.json':>8}")
     print("=" * 80)
     

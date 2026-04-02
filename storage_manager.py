@@ -1,9 +1,13 @@
 import os
+import json
+from datetime import datetime
+from typing import List, Optional
+
 import mysql.connector
 from pymongo import MongoClient
-from datetime import datetime
-import json
 from dotenv import load_dotenv
+
+from buffer_storage import SQLiteBufferStore
 
 load_dotenv()
 
@@ -24,13 +28,14 @@ MONGO_CONFIG = {
 
 class StorageManager:
     
-    def __init__(self):
+    def __init__(self, buffer_store: Optional[SQLiteBufferStore] = None):
         self.mysql_conn = None
         self.mysql_cursor = None
         self.mongo_client = None
         self.mongo_collection = None
         self.sql_schema_created = False
         self.metadata = {}  
+        self.buffer_store = buffer_store or SQLiteBufferStore()
         
     def connect(self):
         try:
@@ -108,12 +113,19 @@ class StorageManager:
         
         sql_data = {'username': username}
         mongo_data = {'username': username}
+        buffer_ids: List[int] = []
         
         for field, value in record.items():
             if field == 'timestamp':
                 continue
             
-            decision = decisions.get(field, 'mongo')
+            decision = (decisions.get(field, 'mongo') or 'mongo').lower()
+            
+            if decision == 'buffer':
+                buffer_id = self._store_buffer_field(field, value, record)
+                if buffer_id:
+                    buffer_ids.append(buffer_id)
+                continue
             
             if decision == 'sql':
                 if not isinstance(value, (dict, list)):
@@ -131,7 +143,7 @@ class StorageManager:
         sql_id = self._insert_sql(sql_data)        
         mongo_id = self._insert_mongo(mongo_data)
         
-        return sql_id, mongo_id
+        return sql_id, mongo_id, buffer_ids
     
     def _insert_sql(self, data):
         try:
@@ -161,19 +173,26 @@ class StorageManager:
     def get_stats(self):
         sql_count = 0
         mongo_count = 0
+        buffer_count = 0
         
         try:
             self.mysql_cursor.execute("SELECT COUNT(*) FROM logs")
             sql_count = self.mysql_cursor.fetchone()[0]
-        except:
+        except Exception:
             pass
         
         try:
             mongo_count = self.mongo_collection.count_documents({})
-        except:
+        except Exception:
             pass
+
+        if self.buffer_store:
+            try:
+                buffer_count = self.buffer_store.count()
+            except Exception:
+                buffer_count = 0
         
-        return {'sql': sql_count, 'mongo': mongo_count}
+        return {'sql': sql_count, 'mongo': mongo_count, 'buffer': buffer_count}
     
     def get_linked_records_by_user(self, username, limit=10):
         sql_records = []
@@ -344,6 +363,15 @@ class StorageManager:
         except Exception as e:
             print(f"Bi-temporal demonstration error: {e}")
     
+    def _store_buffer_field(self, field_name, value, record):
+        if not self.buffer_store:
+            return None
+        try:
+            return self.buffer_store.store_field(field_name, value, record)
+        except Exception as e:
+            print(f"Buffer store error for field '{field_name}': {e}")
+            return None
+
     def close(self):
         if self.mysql_cursor:
             self.mysql_cursor.close()
@@ -353,3 +381,8 @@ class StorageManager:
         if self.mongo_client:
             self.mongo_client.close()
             print("MongoDB closed")
+        if self.buffer_store and hasattr(self.buffer_store, "close"):
+            try:
+                self.buffer_store.close()
+            except Exception:
+                pass

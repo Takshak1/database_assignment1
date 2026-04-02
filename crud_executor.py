@@ -143,14 +143,19 @@ class HybridCRUDExecutor:
     # Insert flow
     # ------------------------------------------------------------------
     def _handle_insert(self, schema_id: int, payload: Dict[str, Any], *, execute: bool) -> Dict[str, Any]:
-        schema = self.registry.get_schema(schema_id)
-        storage_strategy = schema.get("storage_strategy") or {}
-        blueprint = schema.get("sql_blueprint") or schema.get("analysis", {}).get("sql_blueprint")
-        sql_plan = self._plan_sql_inserts(payload, storage_strategy, blueprint)
-        mongo_plan = self._plan_mongo_docs(payload, storage_strategy)
+        plan = self.query_engine.plan_query(
+            schema_id,
+            {
+                "operation": "insert",
+                "payload": payload,
+            },
+        )
+        sql_plan = plan.get("sql") or {"order": [], "rows": {}, "foreign_keys": {}}
+        mongo_plan = plan.get("mongo") or {"collections": {}}
 
         if not execute:
             return {
+                "plan": plan,
                 "sql": sql_plan,
                 "mongo": mongo_plan,
                 "note": "Set execute=true to run inserts against live databases",
@@ -381,23 +386,43 @@ class HybridCRUDExecutor:
         strategy: str,
         execute: bool,
     ) -> Dict[str, Any]:
+        update_plan = self.query_engine.plan_query(
+            schema_id,
+            {
+                "operation": "update",
+                "payload": payload,
+                "filters": filters,
+                "strategy": strategy,
+            },
+        )
+
         if strategy == "simple":
-            delete_result = self._handle_delete(schema_id, filters, strategy="entity", execute=execute)
-            insert_result = self._handle_insert(schema_id, payload, execute=execute)
+            delete_plan = update_plan.get("delete", {})
+            insert_plan = update_plan.get("insert", {})
+            delete_result = self._handle_delete(
+                schema_id,
+                delete_plan.get("filters") or filters,
+                strategy="entity",
+                execute=execute,
+            )
+            insert_result = self._handle_insert(
+                schema_id,
+                payload,
+                execute=execute,
+            )
             return {
                 "strategy": "simple",
+                "plan": update_plan,
                 "delete": delete_result,
                 "insert": insert_result,
             }
 
-        # Advanced: generate targeted updates
-        schema = self.registry.get_schema(schema_id)
-        storage_strategy = schema.get("storage_strategy") or {}
-        blueprint = schema.get("sql_blueprint") or schema.get("analysis", {}).get("sql_blueprint")
-        sql_updates, mongo_updates = self._plan_advanced_updates(payload, storage_strategy, blueprint)
+        sql_updates = update_plan.get("sql") or []
+        mongo_updates = update_plan.get("mongo") or []
         if not execute:
             return {
                 "strategy": "advanced",
+                "plan": update_plan,
                 "sql": sql_updates,
                 "mongo": mongo_updates,
             }
@@ -513,21 +538,22 @@ class HybridCRUDExecutor:
         strategy: str,
         execute: bool,
     ) -> Dict[str, Any]:
-        schema = self.registry.get_schema(schema_id)
-        blueprint = schema.get("sql_blueprint") or schema.get("analysis", {}).get("sql_blueprint")
-        storage_strategy = schema.get("storage_strategy") or {}
-        effective_filters = filters if strategy != "sub-entity" else filters.get("criteria", {})
-        if strategy == "sub-entity":
-            target = filters.get("target")
-            sql_plan = self._plan_subentity_delete(target, blueprint)
-            mongo_plan = self._plan_subentity_mongo_delete(target, storage_strategy)
-        else:
-            sql_plan = self._plan_entity_delete(blueprint)
-            mongo_plan = self._plan_entity_mongo_delete(storage_strategy)
+        delete_plan = self.query_engine.plan_query(
+            schema_id,
+            {
+                "operation": "delete",
+                "filters": filters,
+                "strategy": strategy,
+            },
+        )
+        effective_filters = delete_plan.get("filters") or {}
+        sql_plan = delete_plan.get("sql") or {"tables": []}
+        mongo_plan = delete_plan.get("mongo") or {"collections": []}
 
         if not execute:
             return {
                 "strategy": strategy,
+                "plan": delete_plan,
                 "sql": sql_plan,
                 "mongo": mongo_plan,
                 "note": "Set execute=true to run deletes",
