@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
@@ -474,7 +475,12 @@ class HybridCRUDExecutor:
                         values: List[Any] = []
                         cursor.execute(statement)
                     else:
-                        values = [row_to_insert[col] for col in columns]
+                        values = [
+                            json.dumps(row_to_insert[col], ensure_ascii=False)
+                            if isinstance(row_to_insert[col], (list, dict))
+                            else row_to_insert[col]
+                            for col in columns
+                        ]
                         placeholders = ", ".join(["%s"] * len(columns))
                         statement = f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({placeholders})"
                         cursor.execute(statement, values)

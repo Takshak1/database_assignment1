@@ -58,6 +58,10 @@ def _safe(value: Any) -> str:
     return str(value).replace("<", "&lt;").replace(">", "&gt;")
 
 
+def _json_pretty(value: Any) -> str:
+    return json.dumps(value, indent=2, ensure_ascii=False, default=str)
+
+
 def _parse_filters(raw: Optional[str]) -> Dict[str, Any]:
     if not raw:
         return {}
@@ -90,6 +94,11 @@ def _parse_payload(raw: Optional[str]) -> Dict[str, Any]:
 
 def _default_execute() -> bool:
     return os.getenv("DASHBOARD_EXECUTE", "0").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _default_preview_execute() -> bool:
+    # Entity preview should show actual sample rows by default.
+    return os.getenv("DASHBOARD_PREVIEW_EXECUTE", "1").strip().lower() in {"1", "true", "yes", "on"}
 
 
 def _sanitize_error() -> str:
@@ -170,11 +179,7 @@ def _sql_fk_violations() -> Dict[str, Any]:
                 parent_col = relation.get("to_column")
                 if not all([child, parent, child_col, parent_col]):
                     continue
-                statement = (
-                    f"SELECT COUNT(*) FROM {child} LEFT JOIN {parent} "
-                    f"ON {child}.{child_col} = {parent}.{parent_col} "
-                    f"WHERE {child}.{child_col} IS NOT NULL AND {parent}.{parent_col} IS NULL"
-                )
+                statement = _build_fk_violation_statement(child, parent, child_col, parent_col)
                 cursor.execute(statement)
                 row = cursor.fetchone()
                 count = int(row[0]) if row else 0
@@ -191,6 +196,28 @@ def _sql_fk_violations() -> Dict[str, Any]:
         return {"ok": True, "violations": violations, "total_missing": total_missing}
     except Exception as exc:  # pragma: no cover
         return {"ok": False, "error": str(exc)}
+
+
+def _quote_mysql_identifier(name: Any) -> str:
+    value = str(name or "").strip()
+    if not value:
+        return "``"
+    return f"`{value.replace('`', '``')}`"
+
+
+def _build_fk_violation_statement(child: Any, parent: Any, child_col: Any, parent_col: Any) -> str:
+    child_table = _quote_mysql_identifier(child)
+    parent_table = _quote_mysql_identifier(parent)
+    child_column = _quote_mysql_identifier(child_col)
+    parent_column = _quote_mysql_identifier(parent_col)
+    child_alias = "child_tbl"
+    parent_alias = "parent_tbl"
+    return (
+        f"SELECT COUNT(*) FROM {child_table} AS {child_alias} "
+        f"LEFT JOIN {parent_table} AS {parent_alias} "
+        f"ON {child_alias}.{child_column} = {parent_alias}.{parent_column} "
+        f"WHERE {child_alias}.{child_column} IS NOT NULL AND {parent_alias}.{parent_column} IS NULL"
+    )
 
 
 def _mongo_collection_counts() -> Dict[str, Any]:
@@ -306,6 +333,204 @@ def _plan_summary(plan: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _extract_plan_payload(details: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    if not isinstance(details, dict):
+        return None
+    if isinstance(details.get("field_locations"), list):
+        return details
+    nested = details.get("plan")
+    if isinstance(nested, dict):
+        return nested
+    return None
+
+
+def _logical_plan_view(plan: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not plan:
+        return {
+            "requested_fields": [],
+            "sql_resolved_fields": [],
+            "mongo_resolved_fields": [],
+            "buffer_resolved_fields": [],
+            "missing_fields": [],
+            "merge_key_used": None,
+        }
+
+    field_locations = plan.get("field_locations") or []
+    requested = [loc.get("requested") for loc in field_locations if loc.get("requested")]
+    sql_fields = [loc.get("requested") for loc in field_locations if loc.get("storage") == "sql" and loc.get("requested")]
+    mongo_fields = [loc.get("requested") for loc in field_locations if loc.get("storage") == "mongo" and loc.get("requested")]
+    buffer_fields = [loc.get("requested") for loc in field_locations if loc.get("storage") == "buffer" and loc.get("requested")]
+    missing_fields = [loc.get("requested") for loc in field_locations if loc.get("status") != "resolved" and loc.get("requested")]
+
+    merge_key = None
+    merge_plan = plan.get("merge")
+    if isinstance(merge_plan, dict):
+        merge_key = merge_plan.get("merge_key")
+
+    return {
+        "requested_fields": requested,
+        "sql_resolved_fields": sql_fields,
+        "mongo_resolved_fields": mongo_fields,
+        "buffer_resolved_fields": buffer_fields,
+        "missing_fields": missing_fields,
+        "merge_key_used": merge_key,
+    }
+
+
+def _explainability_badges(plan: Optional[Dict[str, Any]]) -> List[Dict[str, str]]:
+    if not plan:
+        return []
+
+    note_map = {
+        "exact_match": "Exact field mapping",
+        "partial_match": "Partial field-path match",
+        "table_scope": "Mapped by table scope",
+        "metadata_hint": "Inferred from metadata hint",
+        "field_not_found": "No mapping found",
+    }
+
+    badges: List[Dict[str, str]] = []
+    for loc in plan.get("field_locations") or []:
+        field_name = str(loc.get("requested") or "unknown")
+        storage = str(loc.get("storage") or "unknown").lower()
+        note = str(loc.get("notes") or "")
+        reason = note_map.get(note, note or "routing rule")
+        badges.append(
+            {
+                "field": field_name,
+                "storage": storage,
+                "reason": reason,
+                "status": str(loc.get("status") or "unknown"),
+            }
+        )
+    return badges
+
+
+def _backend_operations(details: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(details, dict):
+        return {}
+
+    ops: Dict[str, Any] = {}
+    for key in ("sql", "mongo", "merge"):
+        if key in details:
+            ops[key] = details.get(key)
+
+    plan = details.get("plan")
+    if isinstance(plan, dict):
+        ops.setdefault("plan_sql", plan.get("sql"))
+        ops.setdefault("plan_mongo", plan.get("mongo"))
+        ops.setdefault("plan_merge", plan.get("merge"))
+
+    return ops
+
+
+def _build_empty_read_reason(details: Dict[str, Any]) -> str:
+    if not isinstance(details, dict):
+        return "No logical results returned."
+
+    plan_payload = _extract_plan_payload(details) or {}
+    logical_plan = _logical_plan_view(plan_payload)
+    missing_fields = logical_plan.get("missing_fields") or []
+    if missing_fields:
+        return (
+            "Requested fields could not be resolved in metadata: "
+            + ", ".join(str(field) for field in missing_fields)
+            + "."
+        )
+
+    result_summary = details.get("result_summary") if isinstance(details.get("result_summary"), dict) else {}
+    sql_rows = int(result_summary.get("sql_rows", 0) or 0)
+    mongo_documents = int(result_summary.get("mongo_documents", 0) or 0)
+
+    uses_sql = bool(plan_payload.get("sql"))
+    uses_mongo = bool(plan_payload.get("mongo"))
+    merge_info = plan_payload.get("merge") if isinstance(plan_payload.get("merge"), dict) else {}
+    merge_key = merge_info.get("merge_key")
+    merge_required = bool(uses_sql and uses_mongo and merge_key)
+
+    if merge_required and sql_rows > 0 and mongo_documents == 0:
+        return f"SQL returned rows, but no matching Mongo documents were found for merge key '{merge_key}'."
+    if merge_required and mongo_documents > 0 and sql_rows == 0:
+        return f"Mongo returned documents, but no matching SQL rows were found for merge key '{merge_key}'."
+
+    if uses_sql and uses_mongo and sql_rows == 0 and mongo_documents == 0:
+        return "No SQL rows or Mongo documents matched the current filters."
+    if uses_sql and not uses_mongo and sql_rows == 0:
+        return "No SQL rows matched the current filters."
+    if uses_mongo and not uses_sql and mongo_documents == 0:
+        return "No Mongo documents matched the current filters."
+
+    if uses_sql and uses_mongo:
+        return "Data was fetched from SQL/Mongo, but no merged logical records were produced."
+
+    return "No logical results returned."
+
+
+def _format_field_chips(items: List[str]) -> str:
+    if not items:
+        return "<span class='muted'>None</span>"
+    return "".join(f"<span class='chip'>{_safe(item)}</span>" for item in items)
+
+
+def _render_query_explainability(record: QueryRecord) -> str:
+    summary = record.summary or {}
+    plan_view = summary.get("logical_plan") or {}
+    badges = summary.get("explainability") or []
+    backend_ops = summary.get("backend_operations") or {}
+
+    badge_rows = []
+    for badge in badges:
+        storage = str(badge.get("storage") or "unknown").lower()
+        css = {
+            "sql": "storage-sql",
+            "mongo": "storage-mongo",
+            "buffer": "storage-buffer",
+        }.get(storage, "storage-unknown")
+        badge_rows.append(
+            f"<tr><td>{_safe(badge.get('field'))}</td>"
+            f"<td><span class='badge {css}'>{_safe(storage.upper())}</span></td>"
+            f"<td>{_safe(badge.get('reason'))}</td>"
+            f"<td>{_safe(badge.get('status'))}</td></tr>"
+        )
+
+    explainability_table = ""
+    if badge_rows:
+        explainability_table = f"""
+<div class='card'>
+  <h3>Explainability Badges</h3>
+  <table>
+    <thead><tr><th>Field</th><th>Storage</th><th>Why routed</th><th>Status</th></tr></thead>
+    <tbody>{''.join(badge_rows)}</tbody>
+  </table>
+</div>
+"""
+
+    return f"""
+<div class='card'>
+  <h3>Logical Plan View</h3>
+  <p><strong>Requested fields:</strong> {_format_field_chips(plan_view.get('requested_fields', []))}</p>
+  <p><strong>SQL-resolved fields:</strong> {_format_field_chips(plan_view.get('sql_resolved_fields', []))}</p>
+  <p><strong>Mongo-resolved fields:</strong> {_format_field_chips(plan_view.get('mongo_resolved_fields', []))}</p>
+  <p><strong>Buffer-resolved fields:</strong> {_format_field_chips(plan_view.get('buffer_resolved_fields', []))}</p>
+  <p><strong>Missing fields:</strong> {_format_field_chips(plan_view.get('missing_fields', []))}</p>
+  <p><strong>Merge key used:</strong> {_safe(plan_view.get('merge_key_used') or 'None')}</p>
+</div>
+{explainability_table}
+<div class='card'>
+  <details>
+    <summary><strong>Before/After Example (click to expand)</strong></summary>
+    <p class='muted'>user query → logical result → backend operations</p>
+    <h4>User query</h4>
+    <pre>{_safe(_json_pretty(record.query_input))}</pre>
+    <h4>Logical result</h4>
+    <pre>{_safe(_json_pretty(record.logical_result))}</pre>
+    <h4>Backend operations</h4>
+    <pre>{_safe(_json_pretty(backend_ops))}</pre>
+  </details>
+</div>
+"""
+
+
 registry = SchemaRegistry(db_path=os.getenv("SCHEMA_REGISTRY_DB", "schema_registry.db"))
 executor = HybridCRUDExecutor(registry=registry, metadata_file=os.getenv("METADATA_FILE", "metadata.json"))
 
@@ -367,14 +592,18 @@ def _run_query(
         )
         details = result.details
         plan_summary = _plan_summary(details)
+        plan_payload = _extract_plan_payload(details)
         logical_result = details.get("results") or []
         summary = {
             "items": len(logical_result),
             "note": details.get("note") if not execute else None,
             "plan_summary": plan_summary,
+            "logical_plan": _logical_plan_view(plan_payload),
+            "explainability": _explainability_badges(plan_payload),
+            "backend_operations": _backend_operations(details),
         }
         if execute and not logical_result:
-            summary["note"] = "No logical results returned."
+            summary["note"] = _build_empty_read_reason(details)
     except Exception as exc:
         status = "failed"
         summary = {"error": _sanitize_error(), "detail": str(exc)}
@@ -441,10 +670,14 @@ def _run_crud(
             execute=execute,
         )
         details = result.details
+        plan_payload = _extract_plan_payload(details)
         summary = {
             "executed": execute,
             "operation": op,
             **_summarize_write(details),
+            "logical_plan": _logical_plan_view(plan_payload),
+            "explainability": _explainability_badges(plan_payload),
+            "backend_operations": _backend_operations(details),
         }
     except Exception as exc:
         status = "failed"
@@ -480,6 +713,12 @@ def _html_page(title: str, body: str) -> HTMLResponse:
     table {{ width: 100%; border-collapse: collapse; }}
     th, td {{ text-align: left; padding: 0.5rem; border-bottom: 1px solid #e5e7eb; }}
     .badge {{ display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; background: #e5e7eb; font-size: 0.75rem; }}
+        .chip {{ display: inline-block; margin: 0.1rem 0.25rem 0.1rem 0; padding: 0.2rem 0.5rem; border-radius: 999px; background: #eef2ff; font-size: 0.8rem; }}
+        .storage-sql {{ background: #dbeafe; }}
+        .storage-mongo {{ background: #dcfce7; }}
+        .storage-buffer {{ background: #fef3c7; }}
+        .storage-unknown {{ background: #f3f4f6; }}
+        details summary {{ cursor: pointer; margin-bottom: 0.5rem; }}
     .success {{ background: #dcfce7; }}
     .failed {{ background: #fee2e2; }}
   </style>
@@ -569,19 +808,43 @@ def entity_detail(schema_id: int) -> HTMLResponse:
     preview_fields = [item["field"] for item in fields if item.get("field")][:6]
     preview_html = "<p class='muted'>No fields available for preview.</p>"
     if preview_fields:
+        preview_execute = _default_preview_execute()
         record = _run_query(
             schema_id,
             fields=preview_fields,
             filters={},
             limit=3,
-            execute=_default_execute(),
+            execute=preview_execute,
             record_history=False,
         )
+
+        # If preview is configured as dry-run and returns no logical rows, retry once with execute=True.
+        if not preview_execute and record.status == "ok" and not record.logical_result:
+            record = _run_query(
+                schema_id,
+                fields=preview_fields,
+                filters={},
+                limit=3,
+                execute=True,
+                record_history=False,
+            )
+
+        preview_detail = ""
+        if record.status != "ok":
+            detail = (record.summary or {}).get("detail") or (record.summary or {}).get("error")
+            if detail:
+                preview_detail = f"<p class='muted'><strong>Reason:</strong> {_safe(detail)}</p>"
+        elif not record.logical_result:
+            note = (record.summary or {}).get("note") or "No rows exist yet for this entity in the configured backends."
+            preview_detail = f"<p class='muted'><strong>Reason:</strong> {_safe(note)}</p>"
+
+        result_block = _safe(_json_pretty(record.logical_result)) if record.logical_result else "No sample rows returned."
         preview_html = f"""
 <div class='card'>
   <h3>Sample Instances (logical preview)</h3>
   <p>Status: <span class='badge {'success' if record.status == 'ok' else 'failed'}'>{_safe(record.status)}</span></p>
-  <pre>{_safe(record.logical_result)}</pre>
+  {preview_detail}
+  <pre>{result_block}</pre>
 </div>
 """
 
@@ -695,13 +958,14 @@ def crud_submit(
 <div class='card'>
   <h2>CRUD Result</h2>
   <p>Status: <span class='badge {'success' if record.status == 'ok' else 'failed'}'>{_safe(record.status)}</span></p>
-  <h3>Input</h3>
-  <pre>{_safe(record.query_input)}</pre>
-  <h3>Logical Result</h3>
-  <pre>{_safe(record.logical_result)}</pre>
+    <h3>Input</h3>
+    <pre>{_safe(_json_pretty(record.query_input))}</pre>
+    <h3>Logical Result</h3>
+    <pre>{_safe(_json_pretty(record.logical_result))}</pre>
   <h3>Summary</h3>
-  <pre>{_safe(record.summary)}</pre>
+    <pre>{_safe(_json_pretty(record.summary))}</pre>
 </div>
+{_render_query_explainability(record)}
 """
     return _html_page("CRUD Result", body)
 
@@ -717,11 +981,14 @@ def query_history() -> HTMLResponse:
             f"""
 <div class='card'>
   <p class='muted'>{_safe(record.timestamp)} · Status: <span class='badge {'success' if record.status == 'ok' else 'failed'}'>{_safe(record.status)}</span></p>
-  <strong>Input</strong>
-  <pre>{_safe(record.query_input)}</pre>
-  <strong>Logical Result</strong>
-  <pre>{_safe(record.logical_result)}</pre>
+        <strong>Input</strong>
+        <pre>{_safe(_json_pretty(record.query_input))}</pre>
+        <strong>Logical Result</strong>
+        <pre>{_safe(_json_pretty(record.logical_result))}</pre>
+    <strong>Summary</strong>
+    <pre>{_safe(_json_pretty(record.summary))}</pre>
 </div>
+{_render_query_explainability(record)}
 """
         )
 

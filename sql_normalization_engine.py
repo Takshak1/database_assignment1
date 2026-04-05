@@ -262,7 +262,7 @@ class SQLNormalizationEngine:
             return "TEXT"
         normalized = data_type.lower()
         if normalized.startswith("array"):
-            return "JSONB"
+            return "JSON"
         if normalized in {"string", "text"}:
             return "TEXT"
         if normalized in {"integer", "int", "bigint"}:
@@ -272,7 +272,7 @@ class SQLNormalizationEngine:
         if normalized in {"boolean", "bool"}:
             return "BOOLEAN"
         if normalized in {"object", "json", "jsonb"}:
-            return "JSONB"
+            return "JSON"
         return "TEXT"
 
 

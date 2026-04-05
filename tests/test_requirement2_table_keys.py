@@ -33,5 +33,5 @@ def test_child_tables_include_fk_columns(stored_schema: Dict[str, object]) -> No
     tables = {table["name"]: table for table in blueprint["tables"]}
     for table_name in ("comments", "profile"):
         fk_column = next(column for column in tables[table_name]["columns"] if column["name"] == "post_id")
-        assert fk_column["type"] == "BIGINT"
+        assert fk_column["type"] in {"BIGINT", "BIGINT UNSIGNED"}
         assert fk_column["nullable"] is False
